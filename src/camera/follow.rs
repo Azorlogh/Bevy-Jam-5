@@ -32,8 +32,8 @@ pub fn player_camera(
     mut q_camera: Query<(&mut CameraAngles, &mut Transform), With<MainCamera>>,
 ) {
     for (mut camera_angles, mut camera_tr) in &mut q_camera {
-        camera_angles.yaw += inputs.yaw;
-        camera_angles.pitch += inputs.pitch;
+        camera_angles.yaw += inputs.view.x;
+        camera_angles.pitch += inputs.view.y;
         camera_tr.rotation =
             Quat::from_rotation_y(camera_angles.yaw) * Quat::from_rotation_x(camera_angles.pitch);
     }

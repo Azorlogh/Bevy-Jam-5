@@ -17,8 +17,7 @@ impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((FlycamPlugin, FollowCameraPlugin))
             .insert_resource(MovementSettings {
-                sensitivity: 0.00008, // default: 0.00012
-                speed: 12.0,          // default: 12.0
+                speed: 12.0, // default: 12.0
             })
             .insert_resource(CameraMode::Free)
             .add_systems(Startup, spawn::setup_normal)
