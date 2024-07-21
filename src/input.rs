@@ -2,10 +2,11 @@ use bevy::{
     prelude::*,
     window::{CursorGrabMode, PrimaryWindow},
 };
-use leafwing_input_manager::{
-    action_state::ActionState, axislike::DualAxis, input_map::InputMap, plugin::InputManagerPlugin,
-    Actionlike,
-};
+use bevy_inspector_egui::bevy_egui::EguiContexts;
+use leafwing_input_manager::{action_state::ActionState, plugin::InputManagerPlugin, Actionlike};
+use serde::{Deserialize, Serialize};
+
+use crate::menu::MenuState;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, SystemSet)]
 pub struct InputSet;
@@ -17,8 +18,10 @@ impl Plugin for InputPlugin {
         app.add_plugins(InputManagerPlugin::<Action>::default())
             .init_resource::<ActionState<Action>>()
             .insert_resource(Inputs::default())
-            .add_systems(Startup, setup)
-            .add_systems(Update, (update, cursor_grab));
+            .add_systems(
+                Update,
+                (update, cursor_grab).run_if(in_state(MenuState::None)),
+            );
     }
 }
 
@@ -32,7 +35,7 @@ pub struct Inputs {
     pub crouch: bool,
 }
 
-#[derive(Actionlike, Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect)]
+#[derive(Actionlike, Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect, Serialize, Deserialize)]
 pub enum Action {
     Forward,
     Backward,
@@ -42,23 +45,6 @@ pub enum Action {
     View,
     Jump,
     Crouch,
-}
-
-fn setup(mut cmds: Commands) {
-    let mut map = InputMap::default();
-    map.insert(Action::Forward, KeyCode::KeyW);
-    map.insert(Action::Backward, KeyCode::KeyS);
-    map.insert(Action::Left, KeyCode::KeyA);
-    map.insert(Action::Right, KeyCode::KeyD);
-    map.insert(Action::Jump, KeyCode::Space);
-    map.insert(Action::Crouch, KeyCode::ControlLeft);
-    map.insert(
-        Action::View,
-        DualAxis::mouse_motion()
-            .with_sensitivity(0.001, 0.001)
-            .inverted(),
-    );
-    cmds.insert_resource(map);
 }
 
 fn update(
@@ -96,13 +82,16 @@ fn update(
 }
 
 fn cursor_grab(
+    mut ctx: EguiContexts,
     mut q_window: Query<&mut Window, With<PrimaryWindow>>,
     buttons: Res<ButtonInput<MouseButton>>,
     keys: Res<ButtonInput<KeyCode>>,
 ) {
     let mut window = q_window.single_mut();
     match window.cursor.grab_mode {
-        CursorGrabMode::None if buttons.just_pressed(MouseButton::Left) => {
+        CursorGrabMode::None
+            if buttons.just_pressed(MouseButton::Left) && !ctx.ctx_mut().is_pointer_over_area() =>
+        {
             window.cursor.grab_mode = CursorGrabMode::Locked;
             window.cursor.visible = false;
         }
