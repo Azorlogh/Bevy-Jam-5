@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use crate::input::Inputs;
 
 /// Movement speed
-#[derive(Resource)]
+#[derive(Resource, Reflect)]
 pub struct MovementSettings {
     pub speed: f32,
 }

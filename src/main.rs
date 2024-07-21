@@ -24,7 +24,7 @@ fn main() {
             input::InputPlugin,
             menu::MenuPlugin,
             movement::MovementPlugin,
-            // player::PlayerPlugin,
+            player::PlayerPlugin,
             debug::DebugPlugin,
             terrain::TerrainPlugin,
         ))
