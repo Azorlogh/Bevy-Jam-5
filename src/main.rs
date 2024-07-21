@@ -1,8 +1,10 @@
 mod camera;
 mod debug;
 mod input;
+mod menu;
 mod movement;
 mod player;
+mod settings;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, math::Affine2, prelude::*};
@@ -17,7 +19,9 @@ fn main() {
         ))
         .add_plugins((
             camera::CameraPlugin,
+            settings::SettingsPlugin,
             input::InputPlugin,
+            menu::MenuPlugin,
             movement::MovementPlugin,
             player::PlayerPlugin,
             debug::DebugPlugin,
