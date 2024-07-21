@@ -114,6 +114,21 @@ pub fn build_menu(commands: &mut Commands, asset_server: &Res<AssetServer>) -> E
                     parent.spawn(default_text("Jump ", 32.0, asset_server));
                     parent.spawn((default_text("", 32.0, asset_server), KeyText));
                 });
+            // Crouch
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    ActionButton(Action::Crouch),
+                    ColoredButton,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(default_text("Crouch ", 32.0, asset_server));
+                    parent.spawn((default_text("", 32.0, asset_server), KeyText));
+                });
             // BACK
             parent
                 .spawn((
