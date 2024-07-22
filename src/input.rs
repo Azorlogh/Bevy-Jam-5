@@ -18,10 +18,8 @@ impl Plugin for InputPlugin {
         app.add_plugins(InputManagerPlugin::<Action>::default())
             .init_resource::<ActionState<Action>>()
             .insert_resource(Inputs::default())
-            .add_systems(
-                Update,
-                (update, cursor_grab).run_if(in_state(MenuState::None)),
-            );
+            .add_systems(Update, update.run_if(in_state(MenuState::None)))
+            .add_systems(PostUpdate, cursor_grab.run_if(in_state(MenuState::None)));
     }
 }
 
@@ -33,6 +31,7 @@ pub struct Inputs {
     pub view: Vec2,
     pub jump: bool,
     pub crouch: bool,
+    pub place: bool,
 }
 
 #[derive(Actionlike, Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect, Serialize, Deserialize)]
@@ -45,6 +44,7 @@ pub enum Action {
     View,
     Jump,
     Crouch,
+    Place,
 }
 
 fn update(
@@ -79,6 +79,7 @@ fn update(
 
     inputs.jump = action.pressed(&Action::Jump);
     inputs.crouch = action.pressed(&Action::Crouch);
+    inputs.place = action.pressed(&Action::Place);
 }
 
 fn cursor_grab(
@@ -101,4 +102,10 @@ fn cursor_grab(
         }
         _ => {}
     }
+}
+
+pub fn cursor_is_grabbed(q_window: Query<&Window, With<PrimaryWindow>>) -> bool {
+    q_window
+        .get_single()
+        .is_ok_and(|window| matches!(window.cursor.grab_mode, CursorGrabMode::Locked))
 }

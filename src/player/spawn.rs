@@ -7,7 +7,7 @@ use avian3d::{
 };
 use bevy::prelude::*;
 
-use super::Player;
+use super::{beacon::BeaconCount, Player};
 use crate::{
     camera::follow::Eyes,
     movement::{GroundSensorBundle, MovementInput, OnGround, Speed},
@@ -44,6 +44,7 @@ pub fn player_spawn(mut cmds: Commands, mut ev_spawn_player: EventReader<SpawnPl
                 },
             ),
             (OnGround(false), MovementInput::default(), Speed(10.0)),
+            BeaconCount(10),
         ))
         .with_children(|cmds| {
             cmds.spawn(GroundSensorBundle::new(

@@ -1,3 +1,4 @@
+mod beacon;
 mod camera;
 mod debug;
 mod input;
@@ -25,6 +26,7 @@ fn main() {
             movement::MovementPlugin,
             player::PlayerPlugin,
             debug::DebugPlugin,
+            beacon::BeaconPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
