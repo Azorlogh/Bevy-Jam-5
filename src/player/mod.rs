@@ -4,7 +4,7 @@ use leafwing_input_manager::common_conditions::action_just_pressed;
 
 use crate::{
     camera::{follow::IsControlled, MainCamera},
-    input::{cursor_is_grabbed, Action, Inputs},
+    input::{Action, Inputs},
     movement::{MovementInput, OnGround},
 };
 
@@ -25,8 +25,7 @@ impl Plugin for PlayerPlugin {
                     spawn::player_spawn,
                     player_movement,
                     player_jump,
-                    beacon::place_beacon
-                        .run_if(action_just_pressed(Action::Place).and_then(cursor_is_grabbed)),
+                    beacon::place_beacon.run_if(action_just_pressed(Action::Place)),
                 ),
             );
     }

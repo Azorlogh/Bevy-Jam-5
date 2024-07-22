@@ -48,6 +48,9 @@ pub enum CameraMode {
 #[derive(Component)]
 pub struct MainCamera;
 
+#[derive(Component)]
+pub struct CameraRange(pub f32);
+
 pub fn apply_mode(
     mut cmds: Commands,
     cam_mode: Res<CameraMode>,
@@ -61,13 +64,15 @@ pub fn apply_mode(
         match *cam_mode {
             CameraMode::Follow(followed_e) => {
                 cmds.entity(followed_e).insert(IsControlled);
-                cmds.entity(cam_e).remove::<FlyCam>();
+                cmds.entity(cam_e)
+                    .remove::<FlyCam>()
+                    .insert(CameraRange(3.0));
             }
             CameraMode::Free => {
                 for e in &q_controlled {
                     cmds.entity(e).remove::<IsControlled>();
                 }
-                cmds.entity(cam_e).insert(FlyCam);
+                cmds.entity(cam_e).insert(FlyCam).insert(CameraRange(100.0));
             }
         }
     }
