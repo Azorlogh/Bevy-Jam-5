@@ -6,6 +6,7 @@ use crate::input::Inputs;
 
 /// Movement speed
 #[derive(Resource, Reflect)]
+#[reflect(Resource)]
 pub struct MovementSettings {
     pub speed: f32,
 }
