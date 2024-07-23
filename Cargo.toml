@@ -7,6 +7,7 @@ edition = "2021"
 avian3d = "0.1.1"
 bevy = "0.14.0"
 bevy-inspector-egui = "0.25.1"
+blenvy = { git = "https://github.com/kaosat-dev/Blenvy", branch = "blenvy" }
 directories = "5.0.1"
 leafwing-input-manager = "0.14.0"
 ron = "0.8.1"

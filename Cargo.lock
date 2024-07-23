@@ -824,6 +824,7 @@ dependencies = [
  "avian3d",
  "bevy",
  "bevy-inspector-egui",
+ "blenvy",
  "directories",
  "leafwing-input-manager",
  "ron",
@@ -1308,6 +1309,18 @@ dependencies = [
  "cc",
  "cfg-if",
  "constant_time_eq",
+]
+
+[[package]]
+name = "blenvy"
+version = "0.1.0-alpha.1"
+source = "git+https://github.com/kaosat-dev/Blenvy?branch=blenvy#4a72ed68bf2024f014b7f3695fcd929fa66141d3"
+dependencies = [
+ "bevy",
+ "gltf",
+ "ron",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

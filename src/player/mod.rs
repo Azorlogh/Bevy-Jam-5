@@ -15,7 +15,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<SpawnPlayer>()
             .add_systems(Startup, |mut ev: EventWriter<SpawnPlayer>| {
-                ev.send(SpawnPlayer(Vec3::ONE * 20.0));
+                ev.send(SpawnPlayer(Vec3::Y * 2.0));
             })
             .add_systems(Update, (spawn::player_spawn, player_movement, player_jump));
     }

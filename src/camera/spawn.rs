@@ -1,5 +1,5 @@
 use bevy::{
-    core_pipeline::{experimental::taa::TemporalAntiAliasBundle, Skybox},
+    core_pipeline::{bloom::BloomSettings, experimental::taa::TemporalAntiAliasBundle, Skybox},
     pbr::{ScreenSpaceAmbientOcclusionBundle, VolumetricFogSettings},
     prelude::*,
 };
@@ -33,5 +33,6 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
     .insert(VolumetricFogSettings {
         ambient_intensity: 1.0,
         ..default()
-    });
+    })
+    .insert(BloomSettings::default());
 }

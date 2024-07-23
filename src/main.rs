@@ -1,5 +1,6 @@
 mod camera;
 mod debug;
+mod game;
 mod input;
 mod menu;
 mod movement;
@@ -8,15 +9,18 @@ mod settings;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, math::Affine2, prelude::*};
+use blenvy::BlenvyPlugin;
 
 fn main() {
     App::new()
-        // Enable physics
+        // External plugins
         .add_plugins((
             DefaultPlugins,
             TemporalAntiAliasPlugin,
             PhysicsPlugins::default(),
+            BlenvyPlugin::default(),
         ))
+        // Game plugins
         .add_plugins((
             camera::CameraPlugin,
             settings::SettingsPlugin,
@@ -25,6 +29,7 @@ fn main() {
             movement::MovementPlugin,
             player::PlayerPlugin,
             debug::DebugPlugin,
+            game::GamePlugin,
         ))
         .add_systems(Startup, setup)
         .run();
@@ -79,4 +84,12 @@ fn setup(
         },
         ..default()
     });
+
+    cmds.spawn((
+        Name::new("Temple"),
+        SceneBundle {
+            scene: asset_server.load("levels/Scene.glb#Scene0"),
+            ..default()
+        },
+    ));
 }
