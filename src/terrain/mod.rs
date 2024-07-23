@@ -1,3 +1,4 @@
+use avian3d::math::Scalar;
 use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy::render::{
@@ -86,7 +87,7 @@ fn build_terrain(
             .set_power(tp.n_power)
             .set_roughness(tp.n_roughness);
 
-        let mesh = create_cube_mesh(&tp, &chunk, noise);
+        let (mesh, heights) = create_cube_mesh(&tp, &chunk, noise);
         // Render the mesh with the custom texture using a PbrBundle, add the marker.
         cmds.entity(entity).insert((
             Name::new("Terrain"),
@@ -96,8 +97,10 @@ fn build_terrain(
         ));
 
         if chunk.lod == 0 {
-            cmds.entity(entity)
-                .insert(Collider::trimesh_from_mesh(&mesh).unwrap());
+            cmds.entity(entity).insert(Collider::heightfield(
+                heights,
+                Vec3::new(tp.size, 1.0, tp.size),
+            ));
         };
 
         cmds.entity(entity).insert(PbrBundle {
@@ -111,23 +114,29 @@ fn build_terrain(
     }
 }
 
-fn create_cube_mesh(tp: &TerrainParams, chunk: &Chunk, noise: impl NoiseFn<f64, 2>) -> Mesh {
+fn create_cube_mesh(
+    tp: &TerrainParams,
+    chunk: &Chunk,
+    noise: impl NoiseFn<f64, 2>,
+) -> (Mesh, Vec<Vec<Scalar>>) {
     // Keep the mesh data accessible in future frames to be able to mutate it in toggle_texture.
-    let (vertex_grid, vertex_indices) = create_vertex_grid(&tp, chunk, noise);
-    Mesh::new(
+    let (vertex_grid, vertex_indices, heights) = create_vertex_grid(&tp, chunk, noise);
+    let mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
     )
     .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, vertex_grid)
     .with_inserted_indices(vertex_indices)
-    .with_computed_normals()
+    .with_computed_normals();
+
+    (mesh, heights)
 }
 
 fn create_vertex_grid(
     tp: &TerrainParams,
     chunk: &Chunk,
     noise: impl NoiseFn<f64, 2>,
-) -> (Vec<Vec3>, Indices) {
+) -> (Vec<Vec3>, Indices, Vec<Vec<Scalar>>) {
     let nb_vertices = tp.nb_vertices;
     let size = tp.size;
     let amplitude = tp.amplitude;
@@ -153,7 +162,10 @@ fn create_vertex_grid(
     let mut indices = vec![];
     let mut vidx = 0;
 
+    let mut heights = vec![];
+
     for iy in (0..=ylen).step_by(mesh_simplification_increment) {
+        let mut sub_height = vec![];
         for ix in (0..=xlen).step_by(mesh_simplification_increment) {
             // create vertices
             let x = ((ix as f32) - (nb_vertices as f32 / 2.0)) / nb_vertices as f32 * size;
@@ -161,8 +173,11 @@ fn create_vertex_grid(
             let z = noise.get([
                 ((x + offset.x) * scale) as f64,
                 ((y + offset.y) * scale) as f64,
-            ]) as f32;
-            grid.push(Vec3::new(x, z * amplitude as f32, y));
+            ]) as f32
+                * amplitude as f32;
+
+            sub_height.push(z);
+            grid.push(Vec3::new(x, z, y));
 
             // create indices
             if ix < xlen && iy < ylen {
@@ -175,7 +190,15 @@ fn create_vertex_grid(
             }
             vidx += 1;
         }
+        heights.push(sub_height);
     }
 
-    (grid, Indices::U32(indices))
+    let rows = heights.len();
+    let cols = heights[0].len();
+
+    let transposed: Vec<Vec<_>> = (0..rows)
+        .map(|col| (0..cols).map(|row| heights[row][col]).collect())
+        .collect();
+
+    (grid, Indices::U32(indices), transposed)
 }
