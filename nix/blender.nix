@@ -35,13 +35,13 @@
         install-script = pkgs.writers.writePython3Bin "install-blenvy" { } ''
           import bpy
 
-          bc = '${self'.packages.bevy-components}'
-          bpy.ops.preferences.addon_install(filepath=bc)
-          bpy.ops.preferences.addon_enable(module='bevy_components')
-
-          gae = '${self'.packages.gltf-auto-export}'
-          bpy.ops.preferences.addon_install(filepath=gae)
-          bpy.ops.preferences.addon_enable(module='gltf_auto_export')
+          # bc = '${self'.packages.bevy-components}'
+          # bpy.ops.preferences.addon_install(filepath=bc)
+          # bpy.ops.preferences.addon_enable(module='bevy_components')
+          #
+          # gae = '${self'.packages.gltf-auto-export}'
+          # bpy.ops.preferences.addon_install(filepath=gae)
+          # bpy.ops.preferences.addon_enable(module='gltf_auto_export')
 
           blenvy = '${self'.packages.blenvy}'
           bpy.ops.preferences.addon_install(filepath=blenvy)
