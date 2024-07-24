@@ -1,5 +1,8 @@
 {
-  imports = [ ./rust.nix ];
+  imports = [
+    ./rust.nix
+    ./blender.nix
+  ];
 
   perSystem =
     { self', pkgs, ... }:
