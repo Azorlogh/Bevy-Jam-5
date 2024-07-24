@@ -11,7 +11,6 @@ use loddy::d2::{Lod2dPlugin, Lod2dTree};
 
 use crate::loddy::d2::Chunk;
 use crate::loddy::{self, ChunkReady, ChunkVisibility};
-use crate::player::Player;
 
 pub struct TerrainPlugin;
 impl Plugin for TerrainPlugin {
@@ -23,7 +22,7 @@ impl Plugin for TerrainPlugin {
             .register_type::<ChunkReady>()
             .add_systems(Update, build_terrain) // Change from Update to other
             .add_systems(Update, update_chunk_visibility)
-            .add_systems(Update, update_cursor.before(loddy::d2::update_lod));
+            .add_systems(Update, update_cursor.before(loddy::d2::update_lod_static));
     }
 }
 
@@ -38,7 +37,6 @@ fn update_chunk_visibility(mut q_chunk: Query<(&ChunkVisibility, &mut Visibility
 
 fn update_cursor(
     q_cam: Query<&GlobalTransform, With<Camera>>,
-    // q_cam: Query<&GlobalTransform, With<Player>>,
     tp: Res<TerrainParams>,
     mut lod: ResMut<Lod2dTree>,
 ) {
@@ -61,7 +59,7 @@ pub struct TerrainParams {
 impl Default for TerrainParams {
     fn default() -> Self {
         TerrainParams {
-            nb_vertices: 8,
+            nb_vertices: 12,
             size: 256.0,
             amplitude: 10.0,
             n_frequency: 0.2,
@@ -79,8 +77,9 @@ fn build_terrain(
     q_chunk: Query<(Entity, &Chunk), Added<Chunk>>,
     tp: Res<TerrainParams>,
 ) {
+    let seed = rand::random();
     for (entity, chunk) in q_chunk.iter() {
-        let perlin = Perlin::new(548);
+        let perlin = Perlin::new(seed);
 
         let noise: Turbulence<Perlin, Perlin> = Turbulence::new(perlin)
             .set_frequency(tp.n_frequency)
