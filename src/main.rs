@@ -9,7 +9,7 @@ mod settings;
 mod terrain;
 
 use avian3d::prelude::*;
-use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, math::Affine2, prelude::*};
+use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
 
 fn main() {
     App::new()
@@ -37,7 +37,7 @@ fn setup(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
 ) {
     // Static physics object with a collision shape
     // cmds.spawn((
@@ -76,7 +76,7 @@ fn setup(
         },
         transform: {
             let pos = Quat::from_axis_angle(Vec3::Y, 35f32.to_radians())
-                * Quat::from_axis_angle(Vec3::Z, 47f32.to_radians())
+                * Quat::from_axis_angle(Vec3::Z, 25f32.to_radians())
                 * Vec3::X;
             Transform::from_translation(pos).looking_at(Vec3::ZERO, Vec3::Z)
         },

@@ -1,5 +1,6 @@
 use avian3d::math::Scalar;
 use avian3d::prelude::*;
+use bevy::ecs::entity::EntityHashSet;
 use bevy::prelude::*;
 use bevy::render::{
     mesh::Indices, render_asset::RenderAssetUsages, render_resource::PrimitiveTopology,
@@ -11,6 +12,10 @@ use loddy::d2::{Lod2dPlugin, Lod2dTree};
 
 use crate::loddy::d2::Chunk;
 use crate::loddy::{self, ChunkReady, ChunkVisibility};
+
+// Makes the chunks slighly bigger so that they overlap and blend with neighboring chunks
+// This helps blend between chunks of differing LODs
+const SKIRT_RATIO: f32 = 1.2;
 
 pub struct TerrainPlugin;
 impl Plugin for TerrainPlugin {
@@ -49,6 +54,7 @@ fn update_cursor(
 pub struct TerrainParams {
     nb_vertices: usize,
     size: f32,
+    seed: u32,
     amplitude: f64,
     n_frequency: f64,
     n_power: f64,
@@ -59,8 +65,9 @@ pub struct TerrainParams {
 impl Default for TerrainParams {
     fn default() -> Self {
         TerrainParams {
-            nb_vertices: 12,
+            nb_vertices: 144,
             size: 256.0,
+            seed: 0,
             amplitude: 10.0,
             n_frequency: 0.2,
             n_power: 10.0,
@@ -74,12 +81,25 @@ fn build_terrain(
     mut cmds: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
-    q_chunk: Query<(Entity, &Chunk), Added<Chunk>>,
+    q_added_chunks: Query<Entity, Added<Chunk>>,
+    q_chunks: Query<(Entity, &Chunk)>,
     tp: Res<TerrainParams>,
 ) {
-    let seed = rand::random();
-    for (entity, chunk) in q_chunk.iter() {
-        let perlin = Perlin::new(seed);
+    let chunks_to_build: EntityHashSet = q_added_chunks
+        .iter()
+        .chain(
+            tp.is_changed()
+                .then_some(q_chunks.iter().map(|(e, _)| e))
+                .into_iter()
+                .flatten(),
+        )
+        .collect();
+
+    for (entity, chunk) in chunks_to_build
+        .into_iter()
+        .filter_map(|e| q_chunks.get(e).ok())
+    {
+        let perlin = Perlin::new(tp.seed);
 
         let noise: Turbulence<Perlin, Perlin> = Turbulence::new(perlin)
             .set_frequency(tp.n_frequency)
@@ -98,7 +118,7 @@ fn build_terrain(
         if chunk.lod == 0 {
             cmds.entity(entity).insert(Collider::heightfield(
                 heights,
-                Vec3::new(tp.size, 1.0, tp.size),
+                Vec3::new(tp.size * SKIRT_RATIO, 1.0, tp.size * SKIRT_RATIO),
             ));
         };
 
@@ -144,9 +164,6 @@ fn create_vertex_grid(
     let lod = chunk.lod as usize;
     let offset = chunk.coord.as_vec2() * size;
 
-    let xlen = nb_vertices as u32;
-    let ylen = nb_vertices as u32;
-
     let mesh_simplification_increment = match lod {
         0 => 1,
         _ => lod,
@@ -163,23 +180,33 @@ fn create_vertex_grid(
 
     let mut heights = vec![];
 
-    for iy in (0..=ylen).step_by(mesh_simplification_increment) {
+    for iy in (0..=nb_vertices).step_by(mesh_simplification_increment) {
         let mut sub_height = vec![];
-        for ix in (0..=xlen).step_by(mesh_simplification_increment) {
+        for ix in (0..=nb_vertices).step_by(mesh_simplification_increment) {
             // create vertices
-            let x = ((ix as f32) - (nb_vertices as f32 / 2.0)) / nb_vertices as f32 * size;
-            let y = ((iy as f32) - (nb_vertices as f32 / 2.0)) / nb_vertices as f32 * size;
+            let x = ((ix as f32) - (nb_vertices as f32 / 2.0)) / nb_vertices as f32
+                * size
+                * SKIRT_RATIO;
+            let y = ((iy as f32) - (nb_vertices as f32 / 2.0)) / nb_vertices as f32
+                * size
+                * SKIRT_RATIO;
+
+            let skirt = ((x.abs() / (size / 2.0) - 1.0).max(0.0) / (SKIRT_RATIO - 1.0)).powf(2.0);
+
+            // blend between the noise of the terrain, and the bottom of the skirt
             let z = noise.get([
                 ((x + offset.x) * scale) as f64,
                 ((y + offset.y) * scale) as f64,
             ]) as f32
-                * amplitude as f32;
+                * amplitude as f32
+                * (1.0 - skirt)
+                + (-15.0) * skirt;
 
             sub_height.push(z);
             grid.push(Vec3::new(x, z, y));
 
             // create indices
-            if ix < xlen && iy < ylen {
+            if ix < nb_vertices && iy < nb_vertices {
                 indices.push(vidx);
                 indices.push(vidx + vertices_per_line + 1);
                 indices.push(vidx + 1);

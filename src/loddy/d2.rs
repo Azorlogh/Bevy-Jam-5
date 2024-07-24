@@ -1,6 +1,6 @@
 use std::convert::identity;
 
-use bevy::{color::palettes::css::BLUE, prelude::*};
+use bevy::prelude::*;
 
 use crate::loddy::{ring::Ring, ChunkReady, ChunkVisibility};
 
@@ -11,10 +11,7 @@ impl Plugin for Lod2dPlugin {
         app.insert_resource(Lod2dTree::default())
             .insert_resource(InvalidSlots(vec![]))
             .add_systems(Startup, setup)
-            .add_systems(
-                PostUpdate,
-                (update_lod, spawn_chunks, swap_chunks).chain(),
-            );
+            .add_systems(PostUpdate, (update_lod, spawn_chunks, swap_chunks).chain());
     }
 }
 
@@ -61,17 +58,6 @@ pub const LOD_LEVELS_PER_CHUNK: usize = (LOD_LEVELS_PER_CHUNK_EXTENT as usize) *
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Slot(pub Ring<Option<Entity>, LOD_LEVELS_PER_CHUNK>);
-
-fn render_lod(lod: ResMut<Lod2dTree>, mut gizmos: Gizmos) {
-    let center = lod.pos.round();
-    for r in 0..LOD_GRID_LEN {
-        for c in 0..LOD_GRID_LEN {
-            let offset_r = (r as i32 - LOD_GRID_LEN as i32 / 2) as f32;
-            let offset_c = (c as i32 - LOD_GRID_LEN as i32 / 2) as f32;
-            gizmos.rect_2d(center - Vec2::new(offset_c, offset_r), 0.0, Vec2::ONE, BLUE)
-        }
-    }
-}
 
 fn setup(mut invalid_slots: ResMut<InvalidSlots>) {
     for r in 0..LOD_GRID_LEN {

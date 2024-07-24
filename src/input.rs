@@ -16,6 +16,7 @@ pub struct InputPlugin;
 impl Plugin for InputPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.add_plugins(InputManagerPlugin::<Action>::default())
+            .register_type::<Inputs>()
             .init_resource::<ActionState<Action>>()
             .insert_resource(Inputs::default())
             .add_systems(
@@ -25,7 +26,8 @@ impl Plugin for InputPlugin {
     }
 }
 
-#[derive(Resource, Default)]
+#[derive(Default, Resource, Reflect)]
+#[reflect(Resource)]
 pub struct Inputs {
     /// Direction the player is moving in
     pub dir: Vec2,
