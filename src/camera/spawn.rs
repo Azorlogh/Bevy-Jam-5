@@ -29,7 +29,11 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
             intensity: 500.0,
         },
         sandstorm::PostProcessSettings {
-            intensity: 0.02,
+            strength: 0.5,
+            blowout_factor: 2.5,
+            distort_strength: 0.04,
+            xspd: -1.2,
+            yspd: 0.7,
             ..default()
         },
     ))
