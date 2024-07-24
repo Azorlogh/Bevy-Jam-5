@@ -12,7 +12,7 @@ use avian3d::{
     parry::query::sat::cuboid_support_map_find_local_separating_normal_oneway, prelude::*,
 };
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, math::Affine2, prelude::*};
-// use blenvy::BlenvyPlugin;
+use blenvy::BlenvyPlugin;
 
 fn main() {
     App::new()
@@ -21,7 +21,7 @@ fn main() {
             DefaultPlugins,
             TemporalAntiAliasPlugin,
             PhysicsPlugins::default(),
-            // BlenvyPlugin::default(),
+            BlenvyPlugin::default(),
         ))
         // Game plugins
         .add_plugins((
