@@ -5,6 +5,7 @@ use bevy::{
 };
 
 use super::{flycam::FlyCam, follow::CameraAngles, MainCamera};
+use crate::sandstorm;
 
 pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
     cmds.spawn((
@@ -26,6 +27,10 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
             diffuse_map: asset_server.load("environment_maps/main_diffuse_rgb9e5_zstd.ktx2"),
             specular_map: asset_server.load("environment_maps/main_specular_rgb9e5_zstd.ktx2"),
             intensity: 500.0,
+        },
+        sandstorm::PostProcessSettings {
+            intensity: 0.02,
+            ..default()
         },
     ))
     .insert(ScreenSpaceAmbientOcclusionBundle::default())
