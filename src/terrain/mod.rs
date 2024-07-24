@@ -22,7 +22,7 @@ impl Plugin for TerrainPlugin {
             .register_type::<ChunkReady>()
             .add_systems(Update, build_terrain) // Change from Update to other
             .add_systems(Update, update_chunk_visibility)
-            .add_systems(Update, update_cursor.before(loddy::d2::update_lod_static));
+            .add_systems(Update, update_cursor.before(loddy::d2::update_lod));
     }
 }
 
