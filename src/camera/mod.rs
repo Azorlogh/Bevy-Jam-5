@@ -16,8 +16,9 @@ pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((FlycamPlugin, FollowCameraPlugin))
+            .register_type::<MovementSettings>()
             .insert_resource(MovementSettings {
-                speed: 12.0, // default: 12.0
+                speed: 200.0, // default: 12.0
             })
             .insert_resource(CameraMode::Free)
             .add_systems(Startup, spawn::setup_normal)

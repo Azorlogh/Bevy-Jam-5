@@ -14,14 +14,21 @@ use crate::{
 };
 
 const PLAYER_HEIGHT: f32 = 1.8;
-const PLAYER_RADIUS: f32 = 0.25;
+const PLAYER_RADIUS: f32 = 0.5;
 const PLAYER_EYE_OFFSET: f32 = (PLAYER_HEIGHT * 0.92) / 2.0; // relative to center of body
 
 #[derive(Event)]
 pub struct SpawnPlayer(pub Vec3);
 
-pub fn player_spawn(mut cmds: Commands, mut ev_spawn_player: EventReader<SpawnPlayer>) {
+pub fn player_spawn(
+    mut cmds: Commands,
+    mut ev_spawn_player: EventReader<SpawnPlayer>,
+    q_player: Query<Entity, With<Player>>,
+) {
     for ev in ev_spawn_player.read() {
+        for e in &q_player {
+            cmds.entity(e).despawn_recursive();
+        }
         cmds.spawn((
             Name::new("Player"),
             Player,

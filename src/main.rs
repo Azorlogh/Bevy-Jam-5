@@ -3,16 +3,16 @@ mod camera;
 mod debug;
 mod game;
 mod input;
+mod loddy;
 mod menu;
 mod movement;
 mod player;
 mod sandstorm;
 mod settings;
+mod terrain;
 
-use avian3d::{
-    parry::query::sat::cuboid_support_map_find_local_separating_normal_oneway, prelude::*,
-};
-use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, math::Affine2, prelude::*};
+use avian3d::prelude::*;
+use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
 use blenvy::BlenvyPlugin;
 
 fn main() {
@@ -33,6 +33,7 @@ fn main() {
             movement::MovementPlugin,
             player::PlayerPlugin,
             debug::DebugPlugin,
+            terrain::TerrainPlugin,
             game::GamePlugin,
             // sandstorm::PostProcessPlugin,
             audio::AudioPlugin,
@@ -48,19 +49,19 @@ fn setup(
     asset_server: Res<AssetServer>,
 ) {
     // Static physics object with a collision shape
-    cmds.spawn((
-        RigidBody::Static,
-        Collider::cylinder(40.0, 0.1),
-        PbrBundle {
-            mesh: meshes.add(Cylinder::new(40.0, 0.1)),
-            material: materials.add(StandardMaterial {
-                base_color_texture: Some(asset_server.load("textures/test_texture.png")),
-                uv_transform: Affine2::from_scale(Vec2::splat(5.0)),
-                ..default()
-            }),
-            ..default()
-        },
-    ));
+    // cmds.spawn((
+    //     RigidBody::Static,
+    //     Collider::cylinder(40.0, 0.1),
+    //     PbrBundle {
+    //         mesh: meshes.add(Cylinder::new(40.0, 0.1)),
+    //         material: materials.add(StandardMaterial {
+    //             base_color_texture: Some(asset_server.load("textures/test_texture.png")),
+    //             uv_transform: Affine2::from_scale(Vec2::splat(5.0)),
+    //             ..default()
+    //         }),
+    //         ..default()
+    //     },
+    // ));
 
     // Dynamic physics object with a collision shape and initial angular velocity
     cmds.spawn((
@@ -84,7 +85,7 @@ fn setup(
         },
         transform: {
             let pos = Quat::from_axis_angle(Vec3::Y, 35f32.to_radians())
-                * Quat::from_axis_angle(Vec3::Z, 47f32.to_radians())
+                * Quat::from_axis_angle(Vec3::Z, 25f32.to_radians())
                 * Vec3::X;
             Transform::from_translation(pos).looking_at(Vec3::ZERO, Vec3::Z)
         },

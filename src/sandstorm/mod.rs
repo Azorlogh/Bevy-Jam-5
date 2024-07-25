@@ -315,6 +315,7 @@ pub struct PostProcessSettings {
 }
 
 // Change the intensity over time to show that the effect is controlled from the main world
+#[allow(unused)]
 fn update_settings(mut settings: Query<&mut PostProcessSettings>, time: Res<Time>) {
     for mut setting in &mut settings {
         let mut intensity = time.elapsed_seconds().sin();

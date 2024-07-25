@@ -9586,6 +9586,25 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_jam_5::camera::flycam::MovementSettings": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::camera::flycam::MovementSettings",
+      "properties": {
+        "speed": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "speed"
+      ],
+      "short_name": "MovementSettings",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_jam_5::game::monolith::Monolith": {
       "additionalProperties": false,
       "isComponent": true,
@@ -9612,6 +9631,66 @@
         "Crouch"
       ],
       "short_name": "Action",
+      "type": "string",
+      "typeInfo": "Enum"
+    },
+    "bevy_jam_5::input::Inputs": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::input::Inputs",
+      "properties": {
+        "crouch": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "dir": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec2"
+          }
+        },
+        "jump": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "view": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec2"
+          }
+        }
+      },
+      "required": [
+        "dir",
+        "view",
+        "jump",
+        "crouch"
+      ],
+      "short_name": "Inputs",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::loddy::ChunkReady": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::loddy::ChunkReady",
+      "properties": {},
+      "required": [],
+      "short_name": "ChunkReady",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::loddy::ChunkVisibility": {
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::loddy::ChunkVisibility",
+      "oneOf": [
+        "Visible",
+        "Hidden"
+      ],
+      "short_name": "ChunkVisibility",
       "type": "string",
       "typeInfo": "Enum"
     },
@@ -9678,6 +9757,67 @@
       "short_name": "OnGround",
       "type": "array",
       "typeInfo": "TupleStruct"
+    },
+    "bevy_jam_5::terrain::TerrainParams": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::terrain::TerrainParams",
+      "properties": {
+        "amplitude": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_frequency": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_power": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_roughness": {
+          "type": {
+            "$ref": "#/$defs/usize"
+          }
+        },
+        "n_scale": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "nb_vertices": {
+          "type": {
+            "$ref": "#/$defs/usize"
+          }
+        },
+        "seed": {
+          "type": {
+            "$ref": "#/$defs/u32"
+          }
+        },
+        "size": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "nb_vertices",
+        "size",
+        "seed",
+        "amplitude",
+        "n_frequency",
+        "n_power",
+        "n_roughness",
+        "n_scale"
+      ],
+      "short_name": "TerrainParams",
+      "type": "object",
+      "typeInfo": "Struct"
     },
     "bevy_math::direction::Dir3": {
       "isComponent": false,
