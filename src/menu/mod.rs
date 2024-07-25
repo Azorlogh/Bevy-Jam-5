@@ -4,6 +4,8 @@ use bevy::{
 use controls::ControlsMenuPlugin;
 use styling::MenuStylingPlugin;
 
+use crate::input::cursor_is_grabbed;
+
 mod controls;
 
 #[allow(unused)]
@@ -19,7 +21,7 @@ impl Plugin for MenuPlugin {
                     switch_to_state(MenuState::Controls).run_if(in_state(MenuState::None)),
                     switch_to_state(MenuState::None).run_if(in_state(MenuState::Controls)),
                 )
-                    .run_if(input_just_pressed(KeyCode::Escape)),
+                    .run_if(input_just_pressed(KeyCode::Escape).and_then(not(cursor_is_grabbed))),
             )
             .init_state::<MenuState>();
     }

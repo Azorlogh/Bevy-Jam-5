@@ -1,4 +1,5 @@
 mod audio;
+mod beacon;
 mod camera;
 mod debug;
 mod game;
@@ -35,6 +36,7 @@ fn main() {
             debug::DebugPlugin,
             terrain::TerrainPlugin,
             game::GamePlugin,
+            beacon::BeaconPlugin,
             // sandstorm::PostProcessPlugin,
             audio::AudioPlugin,
         ))

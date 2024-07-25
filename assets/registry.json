@@ -9628,7 +9628,8 @@
         "Move",
         "View",
         "Jump",
-        "Crouch"
+        "Crouch",
+        "Place"
       ],
       "short_name": "Action",
       "type": "string",
@@ -9655,6 +9656,11 @@
             "$ref": "#/$defs/bool"
           }
         },
+        "place": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
         "view": {
           "type": {
             "$ref": "#/$defs/glam::Vec2"
@@ -9665,7 +9671,8 @@
         "dir",
         "view",
         "jump",
-        "crouch"
+        "crouch",
+        "place"
       ],
       "short_name": "Inputs",
       "type": "object",

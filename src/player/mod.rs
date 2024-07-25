@@ -1,12 +1,14 @@
 use avian3d::prelude::{GravityScale, LinearVelocity};
 use bevy::prelude::*;
+use leafwing_input_manager::common_conditions::action_just_pressed;
 
 use crate::{
     camera::{follow::IsControlled, MainCamera},
-    input::Inputs,
+    input::{Action, Inputs},
     movement::{MovementInput, OnGround},
 };
 
+mod beacon;
 mod spawn;
 pub use spawn::SpawnPlayer;
 
@@ -17,7 +19,15 @@ impl Plugin for PlayerPlugin {
             .add_systems(Startup, |mut ev: EventWriter<SpawnPlayer>| {
                 ev.send(SpawnPlayer(Vec3::Y * 2.0));
             })
-            .add_systems(Update, (spawn::player_spawn, player_movement, player_jump));
+            .add_systems(
+                Update,
+                (
+                    spawn::player_spawn,
+                    player_movement,
+                    player_jump,
+                    beacon::place_beacon.run_if(action_just_pressed(Action::Place)),
+                ),
+            );
     }
 }
 

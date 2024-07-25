@@ -3,7 +3,11 @@ use bevy::{
     window::{CursorGrabMode, PrimaryWindow},
 };
 use bevy_inspector_egui::bevy_egui::EguiContexts;
-use leafwing_input_manager::{action_state::ActionState, plugin::InputManagerPlugin, Actionlike};
+use leafwing_input_manager::{
+    action_state::ActionState,
+    plugin::{InputManagerPlugin, ToggleActions},
+    Actionlike,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::menu::MenuState;
@@ -18,11 +22,10 @@ impl Plugin for InputPlugin {
         app.add_plugins(InputManagerPlugin::<Action>::default())
             .register_type::<Inputs>()
             .init_resource::<ActionState<Action>>()
+            .insert_resource(ToggleActions::<Action>::ENABLED)
             .insert_resource(Inputs::default())
-            .add_systems(
-                Update,
-                (update, cursor_grab).run_if(in_state(MenuState::None)),
-            );
+            .add_systems(Update, update.run_if(in_state(MenuState::None)))
+            .add_systems(PostUpdate, cursor_grab.run_if(in_state(MenuState::None)));
     }
 }
 
@@ -35,6 +38,7 @@ pub struct Inputs {
     pub view: Vec2,
     pub jump: bool,
     pub crouch: bool,
+    pub place: bool,
 }
 
 #[derive(Actionlike, Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect, Serialize, Deserialize)]
@@ -47,22 +51,12 @@ pub enum Action {
     View,
     Jump,
     Crouch,
+    Place,
 }
 
-fn update(
-    action: Res<ActionState<Action>>,
-    mut inputs: ResMut<Inputs>,
-    q_window: Query<&Window, With<PrimaryWindow>>,
-) {
+fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
     inputs.dir = Vec2::ZERO;
     inputs.view = Vec2::ZERO;
-
-    if q_window
-        .get_single()
-        .is_ok_and(|win| !matches!(win.cursor.grab_mode, CursorGrabMode::Locked))
-    {
-        return;
-    }
 
     if action.pressed(&Action::Forward) {
         inputs.dir += Vec2::Y;
@@ -81,6 +75,7 @@ fn update(
 
     inputs.jump = action.pressed(&Action::Jump);
     inputs.crouch = action.pressed(&Action::Crouch);
+    inputs.place = action.just_pressed(&Action::Place);
 }
 
 fn cursor_grab(
@@ -88,19 +83,28 @@ fn cursor_grab(
     mut q_window: Query<&mut Window, With<PrimaryWindow>>,
     buttons: Res<ButtonInput<MouseButton>>,
     keys: Res<ButtonInput<KeyCode>>,
+    mut toggle_actions: ResMut<ToggleActions<Action>>,
 ) {
     let mut window = q_window.single_mut();
     match window.cursor.grab_mode {
         CursorGrabMode::None
             if buttons.just_pressed(MouseButton::Left) && !ctx.ctx_mut().is_pointer_over_area() =>
         {
+            toggle_actions.enabled = true;
             window.cursor.grab_mode = CursorGrabMode::Locked;
             window.cursor.visible = false;
         }
         _ if keys.just_pressed(KeyCode::Escape) => {
             window.cursor.grab_mode = CursorGrabMode::None;
             window.cursor.visible = true;
+            toggle_actions.enabled = false;
         }
         _ => {}
     }
+}
+
+pub fn cursor_is_grabbed(q_window: Query<&Window, With<PrimaryWindow>>) -> bool {
+    q_window
+        .get_single()
+        .is_ok_and(|window| matches!(window.cursor.grab_mode, CursorGrabMode::Locked))
 }
