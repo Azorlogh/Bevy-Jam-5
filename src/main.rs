@@ -1,3 +1,4 @@
+mod audio;
 mod camera;
 mod debug;
 mod game;
@@ -34,6 +35,7 @@ fn main() {
             debug::DebugPlugin,
             game::GamePlugin,
             // sandstorm::PostProcessPlugin,
+            audio::AudioPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
