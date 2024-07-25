@@ -1,24 +1,30 @@
+mod audio;
 mod camera;
 mod debug;
+mod game;
 mod input;
 mod loddy;
 mod menu;
 mod movement;
 mod player;
+mod sandstorm;
 mod settings;
 mod terrain;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
+use blenvy::BlenvyPlugin;
 
 fn main() {
     App::new()
-        // Enable physics
+        // External plugins
         .add_plugins((
             DefaultPlugins,
             TemporalAntiAliasPlugin,
             PhysicsPlugins::default(),
+            BlenvyPlugin::default(),
         ))
+        // Game plugins
         .add_plugins((
             camera::CameraPlugin,
             settings::SettingsPlugin,
@@ -28,6 +34,9 @@ fn main() {
             player::PlayerPlugin,
             debug::DebugPlugin,
             terrain::TerrainPlugin,
+            game::GamePlugin,
+            // sandstorm::PostProcessPlugin,
+            audio::AudioPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
@@ -37,7 +46,7 @@ fn setup(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    // asset_server: Res<AssetServer>,
+    asset_server: Res<AssetServer>,
 ) {
     // Static physics object with a collision shape
     // cmds.spawn((
@@ -82,4 +91,12 @@ fn setup(
         },
         ..default()
     });
+
+    cmds.spawn((
+        Name::new("Temple"),
+        SceneBundle {
+            scene: asset_server.load("levels/Scene.glb#Scene0"),
+            ..default()
+        },
+    ));
 }
