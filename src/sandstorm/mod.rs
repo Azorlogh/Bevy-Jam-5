@@ -27,7 +27,6 @@ use bevy::{
             *,
         },
         renderer::{RenderContext, RenderDevice},
-        texture::BevyDefault,
         view::ViewTarget,
         RenderApp,
     },

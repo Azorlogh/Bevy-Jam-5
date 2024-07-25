@@ -33,7 +33,7 @@ fn main() {
             player::PlayerPlugin,
             debug::DebugPlugin,
             game::GamePlugin,
-            sandstorm::PostProcessPlugin,
+            // sandstorm::PostProcessPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
