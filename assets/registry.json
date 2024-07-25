@@ -9416,6 +9416,49 @@
       "type": "array",
       "typeInfo": "TupleStruct"
     },
+    "bevy_jam_5::sandstorm::PostProcessSettings": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::sandstorm::PostProcessSettings",
+      "properties": {
+        "blowout_factor": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "distort_strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "xspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "yspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "strength",
+        "blowout_factor",
+        "distort_strength",
+        "xspd",
+        "yspd"
+      ],
+      "short_name": "PostProcessSettings",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_math::direction::Dir3": {
       "isComponent": false,
       "isResource": false,
