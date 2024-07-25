@@ -8,7 +8,6 @@ mod movement;
 mod player;
 mod sandstorm;
 mod settings;
-mod storm;
 
 use avian3d::{
     parry::query::sat::cuboid_support_map_find_local_separating_normal_oneway, prelude::*,
@@ -37,7 +36,6 @@ fn main() {
             game::GamePlugin,
             // sandstorm::PostProcessPlugin,
             audio::AudioPlugin,
-            storm::SandstormPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
