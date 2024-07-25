@@ -18,10 +18,13 @@ impl Plugin for AudioPlugin {
     }
 }
 
+// TODO: Remove this before release
+// generally pauses the main audio channel (at the start)
 fn pause_audio(audio: Res<AudioChannel<MainTrack>>) {
     audio.pause();
 }
 
+// toggles the audio on/off
 fn toggle_pause(audio: Res<AudioChannel<MainTrack>>, mut paused: Local<bool>) {
     if !*paused {
         audio.resume();
