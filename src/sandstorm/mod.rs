@@ -315,62 +315,6 @@ pub struct PostProcessSettings {
     pub _webgl2_padding: Vec3,
 }
 
-/// Set up a simple 3D scene
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    // camera
-    commands.spawn((
-        Camera3dBundle {
-            transform: Transform::from_translation(Vec3::new(0.0, 0.0, 5.0))
-                .looking_at(Vec3::default(), Vec3::Y),
-            camera: Camera {
-                clear_color: Color::WHITE.into(),
-                ..default()
-            },
-            ..default()
-        },
-        // Add the setting to the camera.
-        // This component is also used to determine on which camera to run the post processing effect.
-        PostProcessSettings {
-            strength: 0.02,
-            ..default()
-        },
-    ));
-
-    // cube
-    commands.spawn((
-        PbrBundle {
-            mesh: meshes.add(Cuboid::default()),
-            material: materials.add(Color::srgb(0.8, 0.7, 0.6)),
-            transform: Transform::from_xyz(0.0, 0.5, 0.0),
-            ..default()
-        },
-        Rotates,
-    ));
-    // light
-    commands.spawn(DirectionalLightBundle {
-        directional_light: DirectionalLight {
-            illuminance: 1_000.,
-            ..default()
-        },
-        ..default()
-    });
-}
-
-#[derive(Component)]
-struct Rotates;
-
-/// Rotates any entity around the x and y axis
-fn rotate(time: Res<Time>, mut query: Query<&mut Transform, With<Rotates>>) {
-    for mut transform in &mut query {
-        transform.rotate_x(0.55 * time.delta_seconds());
-        transform.rotate_z(0.15 * time.delta_seconds());
-    }
-}
-
 // Change the intensity over time to show that the effect is controlled from the main world
 fn update_settings(mut settings: Query<&mut PostProcessSettings>, time: Res<Time>) {
     for mut setting in &mut settings {
