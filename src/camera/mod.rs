@@ -16,8 +16,9 @@ pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((FlycamPlugin, FollowCameraPlugin))
+            .register_type::<MovementSettings>()
             .insert_resource(MovementSettings {
-                speed: 12.0, // default: 12.0
+                speed: 200.0, // default: 12.0
             })
             .insert_resource(CameraMode::Free)
             .add_systems(Startup, spawn::setup_normal)
@@ -66,7 +67,7 @@ pub fn apply_mode(
                 cmds.entity(followed_e).insert(IsControlled);
                 cmds.entity(cam_e)
                     .remove::<FlyCam>()
-                    .insert(CameraRange(3.0));
+                    .insert(CameraRange(5.0));
             }
             CameraMode::Free => {
                 for e in &q_controlled {
