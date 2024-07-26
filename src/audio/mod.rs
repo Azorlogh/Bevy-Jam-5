@@ -1,5 +1,4 @@
 mod ambient;
-mod sfx;
 
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use bevy_kira_audio::prelude::*;
@@ -9,7 +8,7 @@ pub struct AudioPlugin;
 impl Plugin for AudioPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(bevy_kira_audio::AudioPlugin)
-            .add_plugins((sfx::AudioSfxPlugin, ambient::AmbientAudioPlugin))
+            .add_plugins(ambient::AmbientAudioPlugin)
             .add_systems(Startup, pause_audio)
             .add_systems(
                 Update,

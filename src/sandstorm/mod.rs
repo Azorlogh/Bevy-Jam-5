@@ -1,7 +1,10 @@
 pub mod post_process;
+mod sound;
 
 use bevy::{pbr::NotShadowCaster, prelude::*};
+use bevy_kira_audio::{AudioInstance, AudioTween};
 use post_process::PostProcessSettings;
+use sound::SandstormAudioInstances;
 
 use crate::camera::CameraShake;
 
@@ -10,11 +13,11 @@ impl Plugin for SandstormPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<SandstormIntensity>()
             .insert_resource(SandstormIntensity(0.0))
-            .add_plugins(post_process::PostProcessPlugin)
+            .add_plugins((post_process::PostProcessPlugin, sound::SandstormSoundPlugin))
             .add_systems(Startup, setup)
             .add_systems(
                 Update,
-                update_visuals.run_if(resource_changed::<SandstormIntensity>),
+                (update_visuals, update_audio).run_if(resource_changed::<SandstormIntensity>),
             );
     }
 }
@@ -60,10 +63,30 @@ fn update_visuals(
 ) {
     for (mut setting, mut fog, mut shake) in &mut settings {
         setting.strength = intensity.0 * 0.95;
-        fog.falloff = FogFalloff::from_visibility(10000.0 * (1.0 - intensity.0.sqrt()));
+        fog.falloff = FogFalloff::from_visibility(2000.0 * (1.0 - intensity.0.powf(0.15)));
         let mat_handle = q_skybox_cover.single();
         let mat = materials.get_mut(mat_handle).unwrap();
-        mat.base_color.set_alpha(intensity.0);
+        mat.base_color.set_alpha(intensity.0.sqrt());
         shake.0 = intensity.0.powf(2.0);
     }
+}
+
+const MAX_SANDSTORM_VOLUME: f32 = 0.7;
+
+fn update_audio(
+    intensity: Res<SandstormIntensity>,
+    audio_instances: Res<SandstormAudioInstances>,
+    mut instances: ResMut<Assets<AudioInstance>>,
+) {
+    let blend = intensity.0.powf(2.0);
+
+    let weak = (1.0 - blend) * intensity.0 * MAX_SANDSTORM_VOLUME;
+    let strong = blend * intensity.0 * MAX_SANDSTORM_VOLUME;
+    instances
+        .get_mut(audio_instances.weak.id())
+        .map(|s| s.set_volume(weak as f64, AudioTween::default()));
+
+    instances
+        .get_mut(audio_instances.strong.id())
+        .map(|s| s.set_volume(strong as f64, AudioTween::default()));
 }
