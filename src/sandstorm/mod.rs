@@ -66,7 +66,7 @@ fn update_visuals(
         fog.falloff = FogFalloff::from_visibility(2000.0 * (1.0 - intensity.0.powf(0.15)));
         let mat_handle = q_skybox_cover.single();
         let mat = materials.get_mut(mat_handle).unwrap();
-        mat.base_color.set_alpha(intensity.0.sqrt());
+        mat.base_color.set_alpha(intensity.0.powf(0.15));
         shake.0 = intensity.0.powf(2.0);
     }
 }

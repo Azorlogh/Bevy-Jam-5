@@ -5,6 +5,7 @@ use monolith::MonolithPlugin;
 
 use crate::sandstorm::SandstormIntensity;
 
+#[allow(unused)]
 const CYCLE_LENGTH: f32 = 10.0;
 
 pub struct GamePlugin;

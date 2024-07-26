@@ -28,18 +28,15 @@ pub struct SandstormAudioInstances {
 }
 
 fn init_sandstorm_emitter(mut cmds: Commands, audio: Res<Audio>, asset_server: Res<AssetServer>) {
-    // load general sandstorm audio effect
-    let weak_handle = asset_server.load("audio/sfx/sandstorm-weak.mp3");
-    let strong_handle = asset_server.load("audio/sfx/sandstorm-strong.ogg");
-
+    // play sandstorm audio instances
     let instances = SandstormAudioInstances {
         weak: audio
-            .play(weak_handle.clone())
+            .play(asset_server.load("audio/sfx/sandstorm-weak.mp3"))
             .looped()
             .with_volume(0.0)
             .handle(),
         strong: audio
-            .play(strong_handle.clone())
+            .play(asset_server.load("audio/sfx/sandstorm-strong.mp3"))
             .looped()
             .with_volume(0.0)
             .handle(),
