@@ -1,3 +1,6 @@
+use std::ops::{RangeBounds, RangeInclusive};
+use std::time::Duration;
+
 use avian3d::math::Scalar;
 use avian3d::prelude::*;
 use bevy::ecs::entity::EntityHashSet;
@@ -6,6 +9,7 @@ use bevy::render::{
     mesh::Indices, render_asset::RenderAssetUsages, render_resource::PrimitiveTopology,
 };
 
+use bevy::time::common_conditions::on_timer;
 use noise::{NoiseFn, Perlin, Turbulence};
 
 use loddy::d2::{Lod2dPlugin, Lod2dTree};
@@ -27,6 +31,15 @@ impl Plugin for TerrainPlugin {
             .register_type::<ChunkReady>()
             .add_systems(Update, build_terrain) // Change from Update to other
             .add_systems(Update, update_chunk_visibility)
+            .add_systems(
+                Update,
+                (
+                    live_update_chunk_with_lod(0..=0)
+                        .run_if(on_timer(Duration::from_secs_f32(1.0 / 60.0))),
+                    live_update_chunk_with_lod(1..=10)
+                        .run_if(on_timer(Duration::from_secs_f32(1.0))),
+                ),
+            )
             .add_systems(Update, update_cursor.before(loddy::d2::update_lod));
     }
 }
@@ -77,6 +90,41 @@ impl Default for TerrainParams {
     }
 }
 
+fn live_update_chunk_with_lod(
+    lod_range: RangeInclusive<u32>,
+) -> impl Fn(
+    Query<(&Chunk, &mut Collider, &Handle<Mesh>)>,
+    Res<TerrainParams>,
+    ResMut<Assets<Mesh>>,
+    Res<Time>,
+) {
+    move |mut q_chunks, tp, mut meshes, time| {
+        q_chunks
+            .iter_mut()
+            .filter(|(chunk, _, _)| lod_range.contains(&chunk.lod))
+            .for_each(|(chunk, mut collider, mesh_handle)| {
+                if let Some(mesh) = meshes.get_mut(mesh_handle) {
+                    let perlin = Perlin::new(tp.seed);
+
+                    let noise: Turbulence<Perlin, Perlin> = Turbulence::new(perlin)
+                        .set_frequency(tp.n_frequency)
+                        .set_power(tp.n_power)
+                        .set_roughness(tp.n_roughness);
+                    let (new_mesh, heights) = create_cube_mesh(&tp, &chunk, noise, &time);
+                    *mesh = new_mesh;
+
+                    if chunk.lod == 0 {
+                        let new_collider = Collider::heightfield(
+                            heights,
+                            Vec3::new(tp.size * SKIRT_RATIO, 1.0, tp.size * SKIRT_RATIO),
+                        );
+                        *collider = new_collider;
+                    }
+                }
+            })
+    }
+}
+
 fn build_terrain(
     mut cmds: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -84,6 +132,7 @@ fn build_terrain(
     q_added_chunks: Query<Entity, Added<Chunk>>,
     q_chunks: Query<(Entity, &Chunk)>,
     tp: Res<TerrainParams>,
+    time: Res<Time>,
 ) {
     let chunks_to_build: EntityHashSet = q_added_chunks
         .iter()
@@ -106,7 +155,7 @@ fn build_terrain(
             .set_power(tp.n_power)
             .set_roughness(tp.n_roughness);
 
-        let (mesh, heights) = create_cube_mesh(&tp, &chunk, noise);
+        let (mesh, heights) = create_cube_mesh(&tp, &chunk, noise, &time);
         // Render the mesh with the custom texture using a PbrBundle, add the marker.
         cmds.entity(entity).insert((
             Name::new("Terrain"),
@@ -136,10 +185,11 @@ fn build_terrain(
 fn create_cube_mesh(
     tp: &TerrainParams,
     chunk: &Chunk,
-    noise: impl NoiseFn<f64, 2>,
+    noise: impl NoiseFn<f64, 3>,
+    time: &Time,
 ) -> (Mesh, Vec<Vec<Scalar>>) {
     // Keep the mesh data accessible in future frames to be able to mutate it in toggle_texture.
-    let (vertex_grid, vertex_indices, heights) = create_vertex_grid(&tp, chunk, noise);
+    let (vertex_grid, vertex_indices, heights) = create_vertex_grid(&tp, chunk, noise, time);
     let mesh = Mesh::new(
         PrimitiveTopology::TriangleList,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
@@ -154,7 +204,8 @@ fn create_cube_mesh(
 fn create_vertex_grid(
     tp: &TerrainParams,
     chunk: &Chunk,
-    noise: impl NoiseFn<f64, 2>,
+    noise: impl NoiseFn<f64, 3>,
+    time: &Time,
 ) -> (Vec<Vec3>, Indices, Vec<Vec<Scalar>>) {
     let nb_vertices = tp.nb_vertices;
     let size = tp.size;
@@ -197,6 +248,7 @@ fn create_vertex_grid(
             let z = noise.get([
                 ((x + offset.x) * scale) as f64,
                 ((y + offset.y) * scale) as f64,
+                time.elapsed_seconds_f64() * 0.01,
             ]) as f32
                 * amplitude as f32
                 * (1.0 - skirt)
