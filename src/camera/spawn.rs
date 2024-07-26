@@ -4,8 +4,7 @@ use bevy::{
     prelude::*,
 };
 
-use super::{flycam::FlyCam, follow::CameraAngles, MainCamera};
-use crate::sandstorm;
+use super::{flycam::FlyCam, follow::CameraAngles, CameraShake, MainCamera};
 
 pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
     cmds.spawn((
@@ -20,16 +19,16 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
         },
         FlyCam,
         Skybox {
-            brightness: 2500.0,
-            // image: asset_server.load("environment_maps/main_specular_rgb9e5_zstd.ktx2"),
-            image: asset_server.load("environment_maps/night_02_specular_rgb9e5_zstd.ktx2"),
+            brightness: 2500.0 * 2.0,
+            image: asset_server.load("environment_maps/main_specular_rgb9e5_zstd.ktx2"),
+            // image: asset_server.load("environment_maps/night_specular_rgb9e5_zstd.ktx2"),
         },
         EnvironmentMapLight {
-            diffuse_map: asset_server.load("environment_maps/night_02_diffuse_rgb9e5_zstd.ktx2"),
-            specular_map: asset_server.load("environment_maps/night_02_specular_rgb9e5_zstd.ktx2"),
+            diffuse_map: asset_server.load("environment_maps/main_diffuse_rgb9e5_zstd.ktx2"),
+            specular_map: asset_server.load("environment_maps/main_specular_rgb9e5_zstd.ktx2"),
             intensity: 500.0,
         },
-        sandstorm::PostProcessSettings {
+        crate::sandstorm::post_process::PostProcessSettings {
             strength: 0.5,
             blowout_factor: 2.5,
             distort_strength: 0.04,
@@ -37,6 +36,7 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
             yspd: 0.7,
             ..default()
         },
+        CameraShake(0.0),
     ))
     .insert(ScreenSpaceAmbientOcclusionBundle::default())
     .insert(TemporalAntiAliasBundle::default())
@@ -44,5 +44,9 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
         ambient_intensity: 1.0,
         ..default()
     })
-    .insert(BloomSettings::NATURAL);
+    .insert(BloomSettings::NATURAL)
+    .insert(FogSettings {
+        color: Color::srgb_u8(255, 227, 0),
+        ..default()
+    });
 }

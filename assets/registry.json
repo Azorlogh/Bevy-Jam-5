@@ -9765,6 +9765,65 @@
       "type": "array",
       "typeInfo": "TupleStruct"
     },
+    "bevy_jam_5::sandstorm::SandstormIntensity": {
+      "isComponent": false,
+      "isResource": true,
+      "items": false,
+      "long_name": "bevy_jam_5::sandstorm::SandstormIntensity",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      ],
+      "short_name": "SandstormIntensity",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "bevy_jam_5::sandstorm::post_process::PostProcessSettings": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::sandstorm::post_process::PostProcessSettings",
+      "properties": {
+        "blowout_factor": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "distort_strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "xspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "yspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "strength",
+        "blowout_factor",
+        "distort_strength",
+        "xspd",
+        "yspd"
+      ],
+      "short_name": "PostProcessSettings",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_jam_5::terrain::TerrainParams": {
       "additionalProperties": false,
       "isComponent": false,
@@ -9776,24 +9835,29 @@
             "$ref": "#/$defs/f64"
           }
         },
-        "n_frequency": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
         "n_power": {
           "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "n_roughness": {
-          "type": {
-            "$ref": "#/$defs/usize"
+            "$ref": "#/$defs/f32"
           }
         },
         "n_scale": {
           "type": {
             "$ref": "#/$defs/f32"
+          }
+        },
+        "n_turb_frequency": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_turb_power": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_turb_roughness": {
+          "type": {
+            "$ref": "#/$defs/usize"
           }
         },
         "nb_vertices": {
@@ -9817,10 +9881,11 @@
         "size",
         "seed",
         "amplitude",
-        "n_frequency",
-        "n_power",
-        "n_roughness",
-        "n_scale"
+        "n_turb_frequency",
+        "n_turb_power",
+        "n_turb_roughness",
+        "n_scale",
+        "n_power"
       ],
       "short_name": "TerrainParams",
       "type": "object",

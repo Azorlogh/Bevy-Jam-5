@@ -52,6 +52,9 @@ pub struct MainCamera;
 #[derive(Component)]
 pub struct CameraRange(pub f32);
 
+#[derive(Component)]
+pub struct CameraShake(pub f32);
+
 pub fn apply_mode(
     mut cmds: Commands,
     cam_mode: Res<CameraMode>,

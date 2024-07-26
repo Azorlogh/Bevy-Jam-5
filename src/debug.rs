@@ -10,6 +10,10 @@ impl Plugin for DebugPlugin {
                 PhysicsDebugPlugin::new(Update),
                 WorldInspectorPlugin::new().run_if(resource_equals(WorldInspectorEnabled(true))),
             ))
+            .add_systems(Startup, |mut store: ResMut<GizmoConfigStore>| {
+                let cfg = store.config_mut::<PhysicsGizmos>().0;
+                cfg.enabled = !cfg.enabled;
+            })
             .add_systems(
                 Update,
                 (

@@ -25,10 +25,21 @@ impl Plugin for TerrainPlugin {
             .register_type::<TerrainParams>()
             .register_type::<ChunkVisibility>()
             .register_type::<ChunkReady>()
+            .add_systems(Startup, setup_material)
             .add_systems(Update, build_terrain) // Change from Update to other
             .add_systems(Update, update_chunk_visibility)
             .add_systems(Update, update_cursor.before(loddy::d2::update_lod));
     }
+}
+
+#[derive(Resource)]
+pub struct TerrainMaterial(Handle<StandardMaterial>);
+
+fn setup_material(mut cmds: Commands, mut materials: ResMut<Assets<StandardMaterial>>) {
+    cmds.insert_resource(TerrainMaterial(materials.add(StandardMaterial {
+        base_color: Color::srgb_u8(255, 208, 0),
+        ..default()
+    })));
 }
 
 fn update_chunk_visibility(mut q_chunk: Query<(&ChunkVisibility, &mut Visibility)>) {
@@ -56,10 +67,11 @@ pub struct TerrainParams {
     size: f32,
     seed: u32,
     amplitude: f64,
-    n_frequency: f64,
-    n_power: f64,
-    n_roughness: usize,
+    n_turb_frequency: f64,
+    n_turb_power: f64,
+    n_turb_roughness: usize,
     n_scale: f32,
+    n_power: f32,
 }
 
 impl Default for TerrainParams {
@@ -69,21 +81,22 @@ impl Default for TerrainParams {
             size: 256.0,
             seed: 0,
             amplitude: 10.0,
-            n_frequency: 0.2,
-            n_power: 10.0,
-            n_roughness: 4,
-            n_scale: 0.005,
+            n_turb_frequency: 0.2,
+            n_turb_power: 10.0,
+            n_turb_roughness: 4,
+            n_scale: 0.002,
+            n_power: 2.0,
         }
     }
 }
 
 fn build_terrain(
     mut cmds: Commands,
-    mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
     q_added_chunks: Query<Entity, Added<Chunk>>,
     q_chunks: Query<(Entity, &Chunk)>,
     tp: Res<TerrainParams>,
+    material: Res<TerrainMaterial>,
 ) {
     let chunks_to_build: EntityHashSet = q_added_chunks
         .iter()
@@ -102,9 +115,9 @@ fn build_terrain(
         let perlin = Perlin::new(tp.seed);
 
         let noise: Turbulence<Perlin, Perlin> = Turbulence::new(perlin)
-            .set_frequency(tp.n_frequency)
-            .set_power(tp.n_power)
-            .set_roughness(tp.n_roughness);
+            .set_frequency(tp.n_turb_frequency)
+            .set_power(tp.n_turb_power)
+            .set_roughness(tp.n_turb_roughness);
 
         let (mesh, heights) = create_cube_mesh(&tp, &chunk, noise);
         // Render the mesh with the custom texture using a PbrBundle, add the marker.
@@ -124,7 +137,7 @@ fn build_terrain(
 
         cmds.entity(entity).insert(PbrBundle {
             mesh: meshes.add(mesh),
-            material: materials.add(StandardMaterial::default()),
+            material: material.0.clone(),
             transform: Transform::from_translation(
                 chunk.coord.as_vec2().extend(0.0).xzy() * tp.size as f32,
             ),
