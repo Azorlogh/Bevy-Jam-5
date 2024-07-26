@@ -107,4 +107,12 @@ fn setup(
             ..default()
         },
     ));
+
+    cmds.spawn((
+        Name::new("Clocktower"),
+        SceneBundle {
+            scene: asset_server.load("levels/Hub.glb#Scene0"),
+            ..default()
+        },
+    ));
 }
