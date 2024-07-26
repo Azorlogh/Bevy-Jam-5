@@ -65,5 +65,5 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     t *= blowout_factor;
     
     //mix colorized textures to scene
-    return vec4<f32>(mix(sceneColor, vec3(0.65, 0.52, 0.44), t), 1.0);
+    return vec4<f32>(mix(sceneColor, vec3(0.65, 0.52, 0.28), t), 1.0);
 }

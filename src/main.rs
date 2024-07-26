@@ -37,12 +37,15 @@ fn main() {
             terrain::TerrainPlugin,
             game::GamePlugin,
             beacon::BeaconPlugin,
-            // sandstorm::PostProcessPlugin,
+            sandstorm::SandstormPlugin,
             audio::AudioPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
 }
+
+#[derive(Component)]
+pub struct Sun;
 
 fn setup(
     mut cmds: Commands,
@@ -79,20 +82,23 @@ fn setup(
     ));
 
     // Light
-    cmds.spawn(DirectionalLightBundle {
-        directional_light: DirectionalLight {
-            illuminance: 10000.0,
-            shadows_enabled: true,
+    cmds.spawn((
+        Sun,
+        DirectionalLightBundle {
+            directional_light: DirectionalLight {
+                illuminance: 13000.0,
+                shadows_enabled: true,
+                ..default()
+            },
+            transform: {
+                let pos = Quat::from_axis_angle(Vec3::Y, 35f32.to_radians())
+                    * Quat::from_axis_angle(Vec3::Z, 25f32.to_radians())
+                    * Vec3::X;
+                Transform::from_translation(pos).looking_at(Vec3::ZERO, Vec3::Z)
+            },
             ..default()
         },
-        transform: {
-            let pos = Quat::from_axis_angle(Vec3::Y, 35f32.to_radians())
-                * Quat::from_axis_angle(Vec3::Z, 25f32.to_radians())
-                * Vec3::X;
-            Transform::from_translation(pos).looking_at(Vec3::ZERO, Vec3::Z)
-        },
-        ..default()
-    });
+    ));
 
     cmds.spawn((
         Name::new("Temple"),
