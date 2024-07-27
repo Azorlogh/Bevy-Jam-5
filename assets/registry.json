@@ -9586,6 +9586,25 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_jam_5::battery::Battery": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::battery::Battery",
+      "properties": {
+        "name": {
+          "type": {
+            "$ref": "#/$defs/alloc::string::String"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "short_name": "Battery",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_jam_5::camera::flycam::MovementSettings": {
       "additionalProperties": false,
       "isComponent": false,
@@ -9932,6 +9951,31 @@
       "short_name": "ChunkVisibility",
       "type": "string",
       "typeInfo": "Enum"
+    },
+    "bevy_jam_5::tower::BatterySlot": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::tower::BatterySlot",
+      "properties": {
+        "empty": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "name": {
+          "type": {
+            "$ref": "#/$defs/alloc::string::String"
+          }
+        }
+      },
+      "required": [
+        "empty",
+        "name"
+      ],
+      "short_name": "BatterySlot",
+      "type": "object",
+      "typeInfo": "Struct"
     },
     "bevy_jam_5::tower::TowerBell": {
       "additionalProperties": false,
