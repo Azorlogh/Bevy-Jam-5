@@ -5,6 +5,7 @@ use crate::{
     battery,
     camera::{follow::Eyes, MainCamera},
     player::{Inventory, Player},
+    shelter::SafeZoneText,
     tower::BatterySlot,
 };
 
@@ -37,10 +38,16 @@ pub struct Battery {
     pub name: String,
 }
 
+#[derive(Component)]
+pub struct BatteryTakeText;
+
 fn player_interact(
+    mut cmds: Commands,
     q_player: Query<&Transform, With<MainCamera>>,
     q_battery: Query<Entity, With<Battery>>,
     spatial_query: SpatialQuery,
+    asset_server: Res<AssetServer>,
+    q_text: Query<Entity, With<BatteryTakeText>>,
 ) {
     let Ok(player) = q_player.get_single() else {
         return;
@@ -56,8 +63,38 @@ fn player_interact(
         for battery in q_battery.iter() {
             if hit.entity == battery {
                 // Show text for the player
-                dbg!("Battery : {:?} hit", battery);
+                cmds.spawn((
+                    BatteryTakeText,
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            height: Val::Percent(100.0),
+                            align_items: AlignItems::End,
+                            justify_content: JustifyContent::Center,
+                            ..default()
+                        },
+                        ..default()
+                    },
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "Press T To take battery.",
+                        TextStyle {
+                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                            font_size: 30.0,
+                            color: Color::srgb(0.9, 0.9, 0.9),
+                        },
+                    ));
+                });
+            } else {
+                for e in &q_text {
+                    cmds.entity(e).despawn_recursive();
+                }
             }
+        }
+    } else {
+        for e in &q_text {
+            cmds.entity(e).despawn_recursive();
         }
     }
 }
