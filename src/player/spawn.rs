@@ -13,9 +13,9 @@ use crate::{
     movement::{GroundSensorBundle, MovementInput, OnGround, Speed},
 };
 
-const PLAYER_HEIGHT: f32 = 1.8;
-const PLAYER_RADIUS: f32 = 0.5;
-const PLAYER_EYE_OFFSET: f32 = (PLAYER_HEIGHT * 0.92) / 2.0; // relative to center of body
+pub const PLAYER_HEIGHT: f32 = 1.8;
+pub const PLAYER_RADIUS: f32 = 0.5;
+pub const PLAYER_EYE_OFFSET: f32 = (PLAYER_HEIGHT * 0.92) / 2.0; // relative to center of body
 
 #[derive(Event)]
 pub struct SpawnPlayer(pub Vec3);
@@ -36,7 +36,7 @@ pub fn player_spawn(
             (
                 RigidBody::Dynamic,
                 LinearVelocity::default(),
-                Collider::capsule(PLAYER_RADIUS, PLAYER_HEIGHT - PLAYER_RADIUS * 2.0),
+                Collider::capsule(PLAYER_RADIUS, (PLAYER_HEIGHT - PLAYER_RADIUS * 2.0) * 0.4 /* leave some leeway for the legs to flex */),
                 LockedAxes::ROTATION_LOCKED,
                 CollidingEntities::default(),
                 GravityScale(1.0),
@@ -55,7 +55,7 @@ pub fn player_spawn(
         ))
         .with_children(|cmds| {
             cmds.spawn(GroundSensorBundle::new(
-                PLAYER_RADIUS * 0.8,
+                PLAYER_RADIUS * 0.7,
                 -PLAYER_HEIGHT / 2.0,
             ));
             cmds.spawn((

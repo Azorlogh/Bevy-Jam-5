@@ -9847,6 +9847,11 @@
             "$ref": "#/$defs/f32"
           }
         },
+        "n_skew": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
         "n_turb_frequency": {
           "type": {
             "$ref": "#/$defs/f64"
@@ -9887,7 +9892,8 @@
         "n_turb_power",
         "n_turb_roughness",
         "n_scale",
-        "n_power"
+        "n_power",
+        "n_skew"
       ],
       "short_name": "TerrainParams",
       "type": "object",

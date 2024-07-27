@@ -22,7 +22,7 @@ pub struct Lod2dTree {
     pub prev_pos: Vec2,
 }
 
-pub const LOD_GRID_EXTENT: u32 = 3;
+pub const LOD_GRID_EXTENT: u32 = 5;
 pub const LOD_GRID_LEN: usize = (LOD_GRID_EXTENT as usize) * 2 + 1;
 
 impl Lod2dTree {

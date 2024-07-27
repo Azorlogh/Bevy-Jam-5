@@ -15,7 +15,7 @@ impl GroundSensorBundle {
         Self {
             ground_sensor: default(),
             transform: TransformBundle::from_transform(Transform::from_xyz(0.0, y_offset, 0.0)),
-            collider: Collider::cylinder(radius, 0.1),
+            collider: Collider::cylinder(radius, 0.3),
             sensor: Sensor,
             colliding_entities: default(),
         }

@@ -74,20 +74,22 @@ pub struct TerrainParams {
     n_turb_roughness: usize,
     n_scale: f32,
     n_power: f32,
+    n_skew: f64,
 }
 
 impl Default for TerrainParams {
     fn default() -> Self {
         TerrainParams {
-            nb_vertices: 144,
-            size: 256.0,
+            nb_vertices: 64,
+            size: 512.0,
             seed: 0,
-            amplitude: 10.0,
+            amplitude: 20.0,
             n_turb_frequency: 0.2,
             n_turb_power: 10.0,
             n_turb_roughness: 4,
-            n_scale: 0.002,
+            n_scale: 0.001,
             n_power: 2.0,
+            n_skew: 1.0,
         }
     }
 }
@@ -179,10 +181,11 @@ fn create_vertex_grid(
     let lod = chunk.lod as usize;
     let offset = chunk.coord.as_vec2() * size;
 
-    let mesh_simplification_increment = match lod {
-        0 => 1,
-        _ => lod,
-    };
+    // let mesh_simplification_increment = match lod {
+    //     0 => 1,
+    //     _ => lod,
+    // };
+    let mesh_simplification_increment = 2usize.pow(lod as u32);
     // let mesh_simplification_increment = 1;
 
     let vertices_per_line =
@@ -206,16 +209,20 @@ fn create_vertex_grid(
                 * size
                 * SKIRT_RATIO;
 
-            let skirt = ((x.abs() / (size / 2.0) - 1.0).max(0.0) / (SKIRT_RATIO - 1.0)).powf(2.0);
+            let skirt = ((x.abs().max(y.abs()) / (size / 2.0) - 1.0).max(0.0)
+                / (SKIRT_RATIO - 1.0))
+                .powf(2.0);
 
-            // blend between the noise of the terrain, and the bottom of the skirt
-            let z = noise.get([
+            let n = noise.get([
                 ((x + offset.x) * scale) as f64,
                 ((y + offset.y) * scale) as f64,
-            ]) as f32
-                * amplitude as f32
-                * (1.0 - skirt)
-                + (-15.0) * skirt;
+            ]);
+
+            // blend between the noise of the terrain, and the bottom of the skirt
+            // let z = (n.abs().powf(tp.n_power as f64) * n.signum()) as f32 * amplitude as f32
+            //     - 3.0 * skirt;
+            let z = ((n + tp.n_skew).powf(tp.n_power as f64) - tp.n_skew) as f32 * amplitude as f32
+                - 3.0 * skirt;
 
             sub_height.push(z);
             grid.push(Vec3::new(x, z, y));

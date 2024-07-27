@@ -24,7 +24,10 @@ impl Plugin for InputPlugin {
             .init_resource::<ActionState<Action>>()
             .insert_resource(ToggleActions::<Action>::ENABLED)
             .insert_resource(Inputs::default())
-            .add_systems(Update, update.run_if(in_state(MenuState::None)))
+            .add_systems(
+                Update,
+                (reset, update.run_if(in_state(MenuState::None))).chain(),
+            )
             .add_systems(PostUpdate, cursor_grab.run_if(in_state(MenuState::None)));
     }
 }
@@ -54,10 +57,11 @@ pub enum Action {
     Place,
 }
 
-fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
-    inputs.dir = Vec2::ZERO;
-    inputs.view = Vec2::ZERO;
+fn reset(mut inputs: ResMut<Inputs>) {
+    *inputs = default();
+}
 
+fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
     if action.pressed(&Action::Forward) {
         inputs.dir += Vec2::Y;
     }
@@ -70,6 +74,8 @@ fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
     if action.pressed(&Action::Right) {
         inputs.dir += Vec2::X;
     }
+
+    inputs.dir = inputs.dir.normalize_or_zero();
 
     inputs.view = action.clamped_axis_pair(&Action::View).unwrap().xy();
 

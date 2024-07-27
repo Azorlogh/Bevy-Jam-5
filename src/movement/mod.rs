@@ -1,4 +1,4 @@
-use avian3d::prelude::LinearVelocity;
+use avian3d::prelude::{ExternalImpulse, LinearVelocity};
 use bevy::prelude::*;
 
 mod ground;
@@ -24,9 +24,15 @@ pub struct MovementInput(pub Vec2);
 
 fn movement(
     time: Res<Time>,
-    mut q_agent: Query<(&mut LinearVelocity, &OnGround, &MovementInput, &Speed)>,
+    mut q_agent: Query<(
+        &mut LinearVelocity,
+        &mut ExternalImpulse,
+        &OnGround,
+        &MovementInput,
+        &Speed,
+    )>,
 ) {
-    for (mut linvel, on_ground, input, speed) in &mut q_agent {
+    for (linvel, mut impulse, on_ground, input, speed) in &mut q_agent {
         let friction = match on_ground.0 {
             true => 64.0,
             false => 1.0,
@@ -39,14 +45,14 @@ fn movement(
         let dir = input.0;
 
         let lacking = speed.0 - current_vel.dot(dir);
-        linvel.0 += dir.extend(0.0).xzy() * lacking * interp_t;
+        impulse.apply_impulse(dir.extend(0.0).xzy() * lacking * interp_t);
 
         let extra = current_vel.dot(dir.perp());
-        linvel.0 -= dir.perp().extend(0.0).xzy() * extra * interp_t;
+        impulse.apply_impulse(-dir.perp().extend(0.0).xzy() * extra * interp_t);
 
         if dir == Vec2::ZERO {
             let prev_linvel = linvel.0;
-            linvel.0 += -prev_linvel.xz().extend(0.0).xzy() * interp_t;
+            impulse.apply_impulse(-prev_linvel.xz().extend(0.0).xzy() * interp_t);
         }
     }
 }

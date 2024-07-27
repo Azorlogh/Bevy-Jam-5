@@ -1,6 +1,9 @@
-use avian3d::prelude::{GravityScale, LinearVelocity};
+use avian3d::prelude::{
+    AngularVelocity, ExternalForce, GravityScale, LinearVelocity, SpatialQuery, SpatialQueryFilter,
+};
 use bevy::prelude::*;
 use leafwing_input_manager::common_conditions::action_just_pressed;
+use spawn::PLAYER_HEIGHT;
 
 use crate::{
     camera::{follow::IsControlled, MainCamera},
@@ -23,8 +26,7 @@ impl Plugin for PlayerPlugin {
                 Update,
                 (
                     spawn::player_spawn,
-                    player_movement,
-                    player_jump,
+                    (reset_force, player_float, player_movement, player_jump).chain(),
                     beacon::place_beacon.run_if(action_just_pressed(Action::Place)),
                 ),
             );
@@ -48,6 +50,50 @@ pub fn player_movement(
 
         movement_input.0 = dir;
     }
+}
+
+fn reset_force(mut q_player: Query<&mut ExternalForce, With<Player>>) {
+    for mut force in &mut q_player {
+        force.clear();
+    }
+}
+
+pub fn player_float(
+    mut q_player: Query<(
+        Entity,
+        (&mut LinearVelocity, &AngularVelocity, &mut ExternalForce),
+        &Children,
+        &GlobalTransform,
+    )>,
+    spatial: SpatialQuery,
+) {
+    for (entity, (linvel, angvel, mut force), children, tr) in &mut q_player {
+        if let Some(hit) = spatial.cast_ray(
+            tr.translation(),
+            -tr.up(),
+            PLAYER_HEIGHT / 2.0,
+            true,
+            SpatialQueryFilter::from_excluded_entities([entity, children[0], children[1]]),
+        ) {
+            let contact = tr.translation() - tr.up() * hit.time_of_impact;
+            let vel = velocity_at_point(&linvel, &angvel, tr.translation(), contact);
+            let leg_offset = PLAYER_HEIGHT / 2.0 - hit.time_of_impact;
+            let suspension_restitution = leg_offset * 20.0;
+            let suspension_damping = -vel.dot(*tr.up()) * 10.0;
+
+            let up_force = tr.up() * (suspension_restitution + suspension_damping);
+            force.apply_force(up_force);
+        }
+    }
+}
+
+fn velocity_at_point(
+    linvel: &LinearVelocity,
+    angvel: &AngularVelocity,
+    com: Vec3,
+    pt: Vec3,
+) -> Vec3 {
+    linvel.0 + angvel.0.cross(pt - com)
 }
 
 pub fn player_jump(
