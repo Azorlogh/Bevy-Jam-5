@@ -1,4 +1,5 @@
 mod audio;
+mod battery;
 mod beacon;
 mod camera;
 mod debug;
@@ -43,6 +44,7 @@ fn main() {
             tower::TowerPlugin,
             audio::AudioPlugin,
             shelter::ShelterPlugin,
+            battery::BatteryPlugin,
         ))
         .add_systems(Startup, setup)
         .run();

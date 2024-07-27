@@ -37,6 +37,19 @@ impl Plugin for PlayerPlugin {
 #[derive(Component)]
 pub struct Player;
 
+#[derive(Component, Debug)]
+pub struct Inventory {
+    pub batteries: Vec<String>,
+}
+
+impl Default for Inventory {
+    fn default() -> Self {
+        Inventory {
+            batteries: Vec::new(),
+        }
+    }
+}
+
 pub fn player_movement(
     inputs: Res<Inputs>,
     mut q_player: Query<&mut MovementInput, (With<Player>, With<IsControlled>)>,

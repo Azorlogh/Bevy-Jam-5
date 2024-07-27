@@ -7,7 +7,7 @@ use avian3d::{
 };
 use bevy::prelude::*;
 
-use super::{beacon::BeaconCount, Player};
+use super::{beacon::BeaconCount, Inventory, Player};
 use crate::{
     camera::follow::Eyes,
     movement::{GroundSensorBundle, MovementInput, OnGround, Speed},
@@ -32,6 +32,7 @@ pub fn player_spawn(
         cmds.spawn((
             Name::new("Player"),
             Player,
+            Inventory::default(),
             SpatialBundle::from_transform(Transform::from_translation(ev.0)),
             (
                 RigidBody::Dynamic,
