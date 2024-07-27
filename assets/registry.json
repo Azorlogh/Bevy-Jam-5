@@ -9703,29 +9703,6 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "bevy_jam_5::loddy::ChunkReady": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::loddy::ChunkReady",
-      "properties": {},
-      "required": [],
-      "short_name": "ChunkReady",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::loddy::ChunkVisibility": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::loddy::ChunkVisibility",
-      "oneOf": [
-        "Visible",
-        "Hidden"
-      ],
-      "short_name": "ChunkVisibility",
-      "type": "string",
-      "typeInfo": "Enum"
-    },
     "bevy_jam_5::menu::controls::ButtonState": {
       "isComponent": false,
       "isResource": true,
@@ -9915,6 +9892,29 @@
       "short_name": "TerrainParams",
       "type": "object",
       "typeInfo": "Struct"
+    },
+    "bevy_jam_5::terrain::loddy::ChunkReady": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::terrain::loddy::ChunkReady",
+      "properties": {},
+      "required": [],
+      "short_name": "ChunkReady",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::terrain::loddy::ChunkVisibility": {
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "bevy_jam_5::terrain::loddy::ChunkVisibility",
+      "oneOf": [
+        "Visible",
+        "Hidden"
+      ],
+      "short_name": "ChunkVisibility",
+      "type": "string",
+      "typeInfo": "Enum"
     },
     "bevy_jam_5::tower::TowerBell": {
       "additionalProperties": false,

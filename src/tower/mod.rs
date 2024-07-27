@@ -24,7 +24,7 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>) {
     cmds.spawn((
         Name::new("Clocktower"),
         SceneBundle {
-            scene: asset_server.load("levels/Hub.glb#Scene0"),
+            scene: asset_server.load("levels/Tower.glb#Scene0"),
             transform: Transform::from_xyz(100.0, -1.0, 0.0)
                 .with_rotation(Quat::from_rotation_x(0.1) * Quat::from_rotation_y(0.2)),
             ..default()

@@ -8,10 +8,12 @@ use bevy::render::{
 
 use noise::{NoiseFn, Perlin, Turbulence};
 
-use loddy::d2::{Lod2dPlugin, Lod2dTree};
+mod loddy;
 
-use crate::loddy::d2::Chunk;
-use crate::loddy::{self, ChunkReady, ChunkVisibility};
+use loddy::{
+    d2::{Chunk, Lod2dPlugin, Lod2dTree},
+    ChunkReady, ChunkVisibility,
+};
 
 // Makes the chunks slighly bigger so that they overlap and blend with neighboring chunks
 // This helps blend between chunks of differing LODs

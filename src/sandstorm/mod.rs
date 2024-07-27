@@ -63,7 +63,7 @@ fn update_visuals(
 ) {
     for (mut setting, mut fog, mut shake) in &mut settings {
         setting.strength = intensity.0 * 0.95;
-        fog.falloff = FogFalloff::from_visibility(2000.0 * (1.0 - intensity.0.powf(0.15)));
+        fog.falloff = FogFalloff::from_visibility(4000.0 * (1.0 - intensity.0.powf(0.1)));
         let mat_handle = q_skybox_cover.single();
         let mat = materials.get_mut(mat_handle).unwrap();
         mat.base_color.set_alpha(intensity.0.powf(0.15));

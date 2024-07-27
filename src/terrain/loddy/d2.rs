@@ -2,7 +2,7 @@ use std::convert::identity;
 
 use bevy::prelude::*;
 
-use crate::loddy::{ring::Ring, ChunkReady, ChunkVisibility};
+use super::{ring::Ring, ChunkReady, ChunkVisibility};
 
 pub struct Lod2dPlugin;
 
@@ -22,7 +22,7 @@ pub struct Lod2dTree {
     pub prev_pos: Vec2,
 }
 
-pub const LOD_GRID_EXTENT: u32 = 2;
+pub const LOD_GRID_EXTENT: u32 = 3;
 pub const LOD_GRID_LEN: usize = (LOD_GRID_EXTENT as usize) * 2 + 1;
 
 impl Lod2dTree {

@@ -4,7 +4,6 @@ mod camera;
 mod debug;
 mod game;
 mod input;
-mod loddy;
 mod menu;
 mod movement;
 mod player;
