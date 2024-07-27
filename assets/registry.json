@@ -9916,6 +9916,28 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_jam_5::tower::TowerBell": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::tower::TowerBell",
+      "properties": {},
+      "required": [],
+      "short_name": "TowerBell",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::tower::clock::ClockHand": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::tower::clock::ClockHand",
+      "properties": {},
+      "required": [],
+      "short_name": "ClockHand",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_math::direction::Dir3": {
       "isComponent": false,
       "isResource": false,

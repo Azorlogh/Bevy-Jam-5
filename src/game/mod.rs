@@ -1,12 +1,11 @@
 mod monolith;
 
-use bevy::{prelude::*, time::Stopwatch};
+use bevy::prelude::*;
 use monolith::MonolithPlugin;
 
 use crate::{sandstorm::SandstormIntensity, tower::RingBell};
 
-#[allow(unused)]
-const CYCLE_LENGTH: f32 = 10.0;
+pub const CYCLE_LENGTH: f32 = 60.0 * 5.0;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -56,17 +55,13 @@ fn update_game_time(time: Res<Time>, mut game_time: ResMut<GameTime>) {
 fn control_storm(mut storm_intensity: ResMut<SandstormIntensity>, time: Res<GameTime>) {}
 
 fn ring_bell(time: Res<GameTime>, mut ev_ring: EventWriter<RingBell>) {
-    if time.just_passed(30.0) {
-        println!("ring 3!");
+    if time.just_passed(CYCLE_LENGTH) {
         ev_ring.send(RingBell(3));
-    } else if time.just_passed(20.0) {
-        println!("ring 2!");
+    } else if time.just_passed(CYCLE_LENGTH * 0.75) {
         ev_ring.send(RingBell(2));
-    } else if time.just_passed(10.0) {
-        println!("ring 1!");
+    } else if time.just_passed(CYCLE_LENGTH * 0.50) {
         ev_ring.send(RingBell(1));
-    } else if time.prev_time == 0.0 {
-        println!("ring 0!");
+    } else if time.just_passed(CYCLE_LENGTH * 0.25) {
         ev_ring.send(RingBell(0));
     }
 }

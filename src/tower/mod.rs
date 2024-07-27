@@ -1,9 +1,13 @@
+mod clock;
+
 use bevy::{audio::SpatialScale, prelude::*};
 
 pub struct TowerPlugin;
 impl Plugin for TowerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<RingBell>()
+        app.add_plugins(clock::ClockPlugin)
+            .register_type::<TowerBell>()
+            .add_event::<RingBell>()
             .add_systems(Startup, setup)
             .add_systems(Update, ring_bell);
     }
@@ -12,10 +16,11 @@ impl Plugin for TowerPlugin {
 #[derive(Resource)]
 pub struct BellSounds([Handle<AudioSource>; 4]);
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
+#[reflect(Component)]
 pub struct TowerBell;
 
-fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, mut meshes: ResMut<Assets<Mesh>>) {
+fn setup(mut cmds: Commands, asset_server: Res<AssetServer>) {
     cmds.spawn((
         Name::new("Clocktower"),
         SceneBundle {
@@ -24,26 +29,14 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, mut meshes: ResMut<
                 .with_rotation(Quat::from_rotation_x(0.1) * Quat::from_rotation_y(0.2)),
             ..default()
         },
-    ))
-    .with_children(|cmds| {
-        cmds.spawn((
-            // SpatialBundle::from_transform(Transform::from_xyz(0.0, 100.0, 0.0)),
-            PbrBundle {
-                mesh: meshes.add(Sphere::new(3.0)),
-                transform: Transform::from_xyz(0.0, 100.0, 0.0),
-                ..default()
-            },
-            TowerBell,
-            // AudioEmitter::default(),
-        ));
-    });
+    ));
 
     cmds.insert_resource(BellSounds([
         asset_server.load("audio/sfx/tower_bells_1.ogg"),
         asset_server.load("audio/sfx/tower_bells_2.ogg"),
         asset_server.load("audio/sfx/tower_bells_3.ogg"),
         asset_server.load("audio/sfx/tower_bells_long.ogg"),
-    ]))
+    ]));
 }
 
 /// Send this event to ring the bell n times.
@@ -65,8 +58,8 @@ fn ring_bell(
                         source: sounds.0[ev.0 as usize].clone(),
                         settings: PlaybackSettings::DESPAWN
                             .with_spatial(true)
-                            .with_spatial_scale(SpatialScale::new(0.002))
-                            .with_volume(bevy::audio::Volume::new(1.0)),
+                            .with_spatial_scale(SpatialScale::new(0.0005))
+                            .with_volume(bevy::audio::Volume::new(0.5)),
                     },
                 ));
             });
