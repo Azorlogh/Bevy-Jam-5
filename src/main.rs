@@ -11,6 +11,7 @@ mod player;
 mod sandstorm;
 mod settings;
 mod terrain;
+mod tower;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
@@ -38,6 +39,7 @@ fn main() {
             game::GamePlugin,
             beacon::BeaconPlugin,
             sandstorm::SandstormPlugin,
+            tower::TowerPlugin,
             audio::AudioPlugin,
         ))
         .add_systems(Startup, setup)
@@ -104,16 +106,6 @@ fn setup(
         Name::new("Temple"),
         SceneBundle {
             scene: asset_server.load("levels/Scene.glb#Scene0"),
-            ..default()
-        },
-    ));
-
-    cmds.spawn((
-        Name::new("Clocktower"),
-        SceneBundle {
-            scene: asset_server.load("levels/Hub.glb#Scene0"),
-            transform: Transform::from_xyz(100.0, -1.0, 0.0)
-                .with_rotation(Quat::from_rotation_x(0.1) * Quat::from_rotation_y(0.2)),
             ..default()
         },
     ));

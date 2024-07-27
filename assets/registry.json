@@ -9605,6 +9605,31 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_jam_5::game::GameTime": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::game::GameTime",
+      "properties": {
+        "prev_time": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "time": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "time",
+        "prev_time"
+      ],
+      "short_name": "GameTime",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_jam_5::game::monolith::Monolith": {
       "additionalProperties": false,
       "isComponent": true,
