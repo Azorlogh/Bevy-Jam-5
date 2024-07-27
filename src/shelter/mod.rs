@@ -1,4 +1,4 @@
-use avian3d::prelude::{CollidingEntities, SpatialQuery, SpatialQueryFilter};
+use avian3d::prelude::CollidingEntities;
 use bevy::prelude::*;
 
 use crate::{player::Player, terrain::TerrainParams, util::poisson_disc_sampling};

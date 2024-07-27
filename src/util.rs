@@ -1,6 +1,9 @@
 use std::f32::consts::TAU;
 
-use bevy::math::prelude::*;
+use bevy::{
+    audio::{PlaybackSettings, SpatialScale, Volume},
+    math::prelude::*,
+};
 use rand::Rng;
 
 pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec2> {
@@ -60,4 +63,11 @@ pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec
     }
 
     points
+}
+
+pub fn spatial_playback_remove(volume: f32, scale: f32) -> PlaybackSettings {
+    PlaybackSettings::REMOVE
+        .with_spatial(true)
+        .with_volume(Volume::new(volume))
+        .with_spatial_scale(SpatialScale::new(scale))
 }
