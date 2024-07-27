@@ -36,7 +36,7 @@ fn init_sandstorm_emitter(mut cmds: Commands, audio: Res<Audio>, asset_server: R
             .with_volume(0.0)
             .handle(),
         strong: audio
-            .play(asset_server.load("audio/sfx/sandstorm-strong.mp3"))
+            .play(asset_server.load("audio/sfx/sandstorm-strong.ogg"))
             .looped()
             .with_volume(0.0)
             .handle(),
