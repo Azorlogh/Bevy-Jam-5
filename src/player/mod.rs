@@ -1,5 +1,6 @@
 use avian3d::prelude::{
-    AngularVelocity, ExternalForce, GravityScale, LinearVelocity, SpatialQuery, SpatialQueryFilter,
+    AngularVelocity, ExternalForce, GravityScale, LinearVelocity, RigidBody, Sensor, SpatialQuery,
+    SpatialQueryFilter,
 };
 use bevy::prelude::*;
 use leafwing_input_manager::common_conditions::action_just_pressed;
@@ -66,18 +67,20 @@ pub fn player_float(
         &GlobalTransform,
     )>,
     spatial: SpatialQuery,
+    q_sensor: Query<Entity, (Without<Sensor>, With<RigidBody>)>,
 ) {
     for (entity, (linvel, angvel, mut force), children, tr) in &mut q_player {
-        if let Some(hit) = spatial.cast_ray(
+        if let Some(hit) = spatial.cast_ray_predicate(
             tr.translation(),
             -tr.up(),
             PLAYER_HEIGHT / 2.0,
             true,
             SpatialQueryFilter::from_excluded_entities([entity, children[0], children[1]]),
+            &|e| q_sensor.contains(e),
         ) {
             let contact = tr.translation() - tr.up() * hit.time_of_impact;
             let vel = velocity_at_point(&linvel, &angvel, tr.translation(), contact);
-            let leg_offset = PLAYER_HEIGHT / 2.0 - hit.time_of_impact;
+            let leg_offset = (PLAYER_HEIGHT / 2.0 - hit.time_of_impact).max(0.0);
             let suspension_restitution = leg_offset * 20.0;
             let suspension_damping = -vel.dot(*tr.up()) * 10.0;
 

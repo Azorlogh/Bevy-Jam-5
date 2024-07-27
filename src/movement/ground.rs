@@ -32,10 +32,11 @@ pub struct GroundSensor;
 pub fn detect_ground(
     q_sensor: Query<(&Parent, &CollidingEntities), With<GroundSensor>>,
     mut q_agent: Query<&mut OnGround>,
+    q_solid: Query<(), (With<RigidBody>, Without<Sensor>)>,
 ) {
     for (parent, sensor) in &q_sensor {
         if let Ok(mut on_ground) = q_agent.get_mut(parent.get()) {
-            on_ground.0 = !sensor.is_empty();
+            on_ground.0 = sensor.iter().any(|e| q_solid.contains(*e));
         }
     }
 }

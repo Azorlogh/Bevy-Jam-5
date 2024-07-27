@@ -9,8 +9,10 @@ mod movement;
 mod player;
 mod sandstorm;
 mod settings;
+mod shelter;
 mod terrain;
 mod tower;
+mod util;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
@@ -40,6 +42,7 @@ fn main() {
             sandstorm::SandstormPlugin,
             tower::TowerPlugin,
             audio::AudioPlugin,
+            shelter::ShelterPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
