@@ -25,11 +25,15 @@ impl Plugin for CameraPlugin {
             .add_systems(Update, apply_mode)
             .add_systems(
                 Update,
-                (|mut mode: ResMut<CameraMode>, q_player: Query<Entity, With<Player>>| {
+                (|mut mode: ResMut<CameraMode>, mut q_player: Query<(Entity, &mut Transform), With<Player>>, q_camera: Query<&Transform, (Without<Player>, With<MainCamera>)>| {
                     println!("mode switch!");
-                    *mode = match (*mode, q_player.get_single()) {
+                    *mode = match (*mode, q_player.get_single_mut()) {
                         (CameraMode::Follow(_), _) => CameraMode::Free,
-                        (CameraMode::Free, Ok(player_e)) => CameraMode::Follow(player_e),
+                        (CameraMode::Free, Ok((player_e, mut player_tr))) => {
+                            let cam_pos = q_camera.get_single().unwrap().translation;
+                            player_tr.translation = cam_pos;
+                            CameraMode::Follow(player_e)
+                        },
                         (m, _) => m,
                     }
                 })

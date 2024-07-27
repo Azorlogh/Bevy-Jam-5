@@ -48,15 +48,14 @@ impl FromWorld for AmbientMusicHandles {
         // load a fixed set of tracks on app start
         let asset_server = world.resource::<AssetServer>();
         let handles = [
-            "bj5_desert",
-            "desert-storm-ii",
-            "desert-voices",
-            "sahara-sunrise",
+            "bj5_desert.ogg",
+            "desert-storm-ii.mp3",
+            "desert-voices.mp3",
+            "sahara-sunrise.mp3",
         ]
-        .map(|name| format!("{name}.mp3"))
         .map(|name| {
             (
-                TrackTitle(name.clone()),
+                TrackTitle(name.to_owned()),
                 asset_server.load(format!("audio/music/{name}")),
             )
         })

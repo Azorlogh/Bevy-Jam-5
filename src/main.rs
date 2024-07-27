@@ -11,6 +11,7 @@ mod player;
 mod sandstorm;
 mod settings;
 mod terrain;
+mod tower;
 
 use avian3d::prelude::*;
 use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
@@ -38,6 +39,7 @@ fn main() {
             game::GamePlugin,
             beacon::BeaconPlugin,
             sandstorm::SandstormPlugin,
+            tower::TowerPlugin,
             audio::AudioPlugin,
         ))
         .add_systems(Startup, setup)
