@@ -129,8 +129,10 @@ fn deploy(
             let (mut segment_tr, emitter) = q_segment.get_mut(*segment_e).unwrap();
             if (t - i as f32) > 1.0 && (prev_t - i as f32) <= 1.0 {
                 println!("playing because: {} {}", t, prev_t);
-                audio_instances
-                    .get_mut(emitter.instances[0].id())
+                emitter
+                    .instances
+                    .get(0)
+                    .and_then(|inst| audio_instances.get_mut(inst.id()))
                     .map(|s| s.resume(default()));
             }
             let t = (t - i as f32).clamp(0.0, 1.0).powf(4.0);

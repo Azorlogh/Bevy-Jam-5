@@ -74,7 +74,22 @@ pub struct TerrainParams {
     n_turb_roughness: usize,
     n_scale: f32,
     n_power: f32,
-    n_skew: f64,
+    n_skew: f32,
+}
+
+impl TerrainParams {
+    pub fn get_height(&self, pos: Vec2) -> f32 {
+        let perlin = Perlin::new(self.seed);
+
+        let noise: Turbulence<Perlin, Perlin> = Turbulence::new(perlin)
+            .set_frequency(self.n_turb_frequency)
+            .set_power(self.n_turb_power)
+            .set_roughness(self.n_turb_roughness);
+
+        let n = noise.get((pos * self.n_scale).as_dvec2().to_array()) as f32;
+
+        ((n + self.n_skew).powf(self.n_power) - self.n_skew) as f32 * self.amplitude as f32
+    }
 }
 
 impl Default for TerrainParams {
@@ -175,7 +190,6 @@ fn create_vertex_grid(
 ) -> (Vec<Vec3>, Indices, Vec<Vec<Scalar>>) {
     let nb_vertices = tp.nb_vertices;
     let size = tp.size;
-    let amplitude = tp.amplitude;
     let scale = tp.n_scale;
 
     let lod = chunk.lod as usize;
@@ -216,12 +230,12 @@ fn create_vertex_grid(
             let n = noise.get([
                 ((x + offset.x) * scale) as f64,
                 ((y + offset.y) * scale) as f64,
-            ]);
+            ]) as f32;
 
             // blend between the noise of the terrain, and the bottom of the skirt
             // let z = (n.abs().powf(tp.n_power as f64) * n.signum()) as f32 * amplitude as f32
             //     - 3.0 * skirt;
-            let z = ((n + tp.n_skew).powf(tp.n_power as f64) - tp.n_skew) as f32 * amplitude as f32
+            let z = ((n + tp.n_skew).powf(tp.n_power) - tp.n_skew) as f32 * tp.amplitude as f32
                 - 3.0 * skirt;
 
             sub_height.push(z);
