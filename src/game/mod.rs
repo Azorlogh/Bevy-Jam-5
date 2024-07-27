@@ -56,7 +56,17 @@ fn update_game_time(time: Res<Time>, mut game_time: ResMut<GameTime>) {
 fn control_storm(mut storm_intensity: ResMut<SandstormIntensity>, time: Res<GameTime>) {}
 
 fn ring_bell(time: Res<GameTime>, mut ev_ring: EventWriter<RingBell>) {
-    if time.just_passed(6.0) {
+    if time.just_passed(30.0) {
+        println!("ring 3!");
         ev_ring.send(RingBell(3));
+    } else if time.just_passed(20.0) {
+        println!("ring 2!");
+        ev_ring.send(RingBell(2));
+    } else if time.just_passed(10.0) {
+        println!("ring 1!");
+        ev_ring.send(RingBell(1));
+    } else if time.prev_time == 0.0 {
+        println!("ring 0!");
+        ev_ring.send(RingBell(0));
     }
 }

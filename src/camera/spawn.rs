@@ -48,5 +48,9 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
     .insert(FogSettings {
         color: Color::srgb_u8(255, 227, 0),
         ..default()
+    })
+    .insert(SpatialListener {
+        left_ear_offset: Vec3::X * 0.5 / 2.0,
+        right_ear_offset: Vec3::X * 0.5 / -2.0,
     });
 }
