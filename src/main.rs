@@ -4,6 +4,7 @@ mod camera;
 mod debug;
 mod game;
 mod input;
+mod materials;
 mod menu;
 mod movement;
 mod player;
@@ -43,6 +44,7 @@ fn main() {
             tower::TowerPlugin,
             audio::AudioPlugin,
             shelter::ShelterPlugin,
+            materials::BuiltinMaterialsPlugin,
         ))
         .add_systems(Startup, setup)
         .run();

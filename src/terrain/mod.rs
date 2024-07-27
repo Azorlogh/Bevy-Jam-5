@@ -1,6 +1,7 @@
 use avian3d::math::Scalar;
 use avian3d::prelude::*;
 use bevy::ecs::entity::EntityHashSet;
+use bevy::pbr::ExtendedMaterial;
 use bevy::prelude::*;
 use bevy::render::{
     mesh::Indices, render_asset::RenderAssetUsages, render_resource::PrimitiveTopology,
@@ -14,6 +15,8 @@ use loddy::{
     d2::{Chunk, Lod2dPlugin, Lod2dTree},
     ChunkReady, ChunkVisibility,
 };
+
+use crate::materials::sand::{SandMaterial, SandMaterialExtension};
 
 // Makes the chunks slighly bigger so that they overlap and blend with neighboring chunks
 // This helps blend between chunks of differing LODs
@@ -35,12 +38,15 @@ impl Plugin for TerrainPlugin {
 }
 
 #[derive(Resource)]
-pub struct TerrainMaterial(Handle<StandardMaterial>);
+pub struct TerrainMaterial(Handle<SandMaterial>);
 
-fn setup_material(mut cmds: Commands, mut materials: ResMut<Assets<StandardMaterial>>) {
-    cmds.insert_resource(TerrainMaterial(materials.add(StandardMaterial {
-        base_color: Color::srgb_u8(255, 208, 0),
-        ..default()
+fn setup_material(mut cmds: Commands, mut materials: ResMut<Assets<SandMaterial>>) {
+    cmds.insert_resource(TerrainMaterial(materials.add(ExtendedMaterial {
+        base: StandardMaterial {
+            base_color: Color::srgb_u8(255, 208, 0),
+            ..default()
+        },
+        extension: SandMaterialExtension::default(),
     })));
 }
 
@@ -154,7 +160,7 @@ fn build_terrain(
             ));
         };
 
-        cmds.entity(entity).insert(PbrBundle {
+        cmds.entity(entity).insert(MaterialMeshBundle {
             mesh: meshes.add(mesh),
             material: material.0.clone(),
             transform: Transform::from_translation(
