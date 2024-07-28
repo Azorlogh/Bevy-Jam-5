@@ -12,7 +12,7 @@ impl Plugin for AudioPlugin {
             .add_systems(Startup, pause_audio)
             .add_systems(
                 Update,
-                toggle_pause.run_if(input_just_pressed(KeyCode::KeyM)),
+                toggle_pause.run_if(input_just_pressed(KeyCode::KeyE)),
             );
     }
 }

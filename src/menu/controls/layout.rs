@@ -129,7 +129,7 @@ pub fn build_menu(commands: &mut Commands, asset_server: &Res<AssetServer>) -> E
                     parent.spawn(default_text("Crouch ", 32.0, asset_server));
                     parent.spawn((default_text("", 32.0, asset_server), KeyText));
                 });
-            // Place
+            // Interact
             parent
                 .spawn((
                     ButtonBundle {
@@ -137,11 +137,26 @@ pub fn build_menu(commands: &mut Commands, asset_server: &Res<AssetServer>) -> E
                         background_color: BUTTON_COLOR.into(),
                         ..default()
                     },
-                    ActionButton(Action::Place),
+                    ActionButton(Action::Interact),
                     ColoredButton,
                 ))
                 .with_children(|parent| {
-                    parent.spawn(default_text("Place ", 32.0, asset_server));
+                    parent.spawn(default_text("Interact ", 32.0, asset_server));
+                    parent.spawn((default_text("", 32.0, asset_server), KeyText));
+                });
+            // Place beacon
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    ActionButton(Action::PlaceBeacon),
+                    ColoredButton,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(default_text("Place beacon ", 32.0, asset_server));
                     parent.spawn((default_text("", 32.0, asset_server), KeyText));
                 });
             // BACK

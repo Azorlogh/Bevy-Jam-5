@@ -42,6 +42,7 @@ pub struct Inputs {
     pub jump: bool,
     pub crouch: bool,
     pub place: bool,
+    pub interact: bool,
 }
 
 #[derive(Actionlike, Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect, Serialize, Deserialize)]
@@ -54,7 +55,8 @@ pub enum Action {
     View,
     Jump,
     Crouch,
-    Place,
+    PlaceBeacon,
+    Interact,
 }
 
 fn reset(mut inputs: ResMut<Inputs>) {
@@ -81,7 +83,8 @@ fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
 
     inputs.jump = action.pressed(&Action::Jump);
     inputs.crouch = action.pressed(&Action::Crouch);
-    inputs.place = action.just_pressed(&Action::Place);
+    inputs.place = action.just_pressed(&Action::PlaceBeacon);
+    inputs.interact = action.just_pressed(&Action::Interact);
 }
 
 fn cursor_grab(

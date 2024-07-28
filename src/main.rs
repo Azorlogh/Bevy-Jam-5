@@ -1,4 +1,5 @@
 mod audio;
+mod battery;
 mod beacon;
 mod camera;
 mod debug;
@@ -30,21 +31,24 @@ fn main() {
         ))
         // Game plugins
         .add_plugins((
-            camera::CameraPlugin,
-            settings::SettingsPlugin,
-            input::InputPlugin,
-            menu::MenuPlugin,
-            movement::MovementPlugin,
-            player::PlayerPlugin,
-            debug::DebugPlugin,
-            terrain::TerrainPlugin,
-            game::GamePlugin,
-            beacon::BeaconPlugin,
-            sandstorm::SandstormPlugin,
-            tower::TowerPlugin,
-            audio::AudioPlugin,
-            shelter::ShelterPlugin,
-            materials::BuiltinMaterialsPlugin,
+            (
+                camera::CameraPlugin,
+                settings::SettingsPlugin,
+                input::InputPlugin,
+                menu::MenuPlugin,
+                movement::MovementPlugin,
+                player::PlayerPlugin,
+                debug::DebugPlugin,
+                terrain::TerrainPlugin,
+                game::GamePlugin,
+                beacon::BeaconPlugin,
+                sandstorm::SandstormPlugin,
+                tower::TowerPlugin,
+                audio::AudioPlugin,
+                shelter::ShelterPlugin,
+                battery::BatteryPlugin,
+            ),
+            (materials::BuiltinMaterialsPlugin,),
         ))
         .add_systems(Startup, setup)
         .run();
@@ -57,23 +61,7 @@ fn setup(
     mut cmds: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    asset_server: Res<AssetServer>,
 ) {
-    // Static physics object with a collision shape
-    // cmds.spawn((
-    //     RigidBody::Static,
-    //     Collider::cylinder(40.0, 0.1),
-    //     PbrBundle {
-    //         mesh: meshes.add(Cylinder::new(40.0, 0.1)),
-    //         material: materials.add(StandardMaterial {
-    //             base_color_texture: Some(asset_server.load("textures/test_texture.png")),
-    //             uv_transform: Affine2::from_scale(Vec2::splat(5.0)),
-    //             ..default()
-    //         }),
-    //         ..default()
-    //     },
-    // ));
-
     // Dynamic physics object with a collision shape and initial angular velocity
     cmds.spawn((
         RigidBody::Dynamic,
@@ -105,12 +93,4 @@ fn setup(
             ..default()
         },
     ));
-
-    // cmds.spawn((
-    //     Name::new("Temple"),
-    //     SceneBundle {
-    //         scene: asset_server.load("levels/Scene.glb#Scene0"),
-    //         ..default()
-    //     },
-    // ));
 }
