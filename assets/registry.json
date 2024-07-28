@@ -9689,6 +9689,47 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_jam_5::camera::CameraMode": {
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::camera::CameraMode",
+      "oneOf": [
+        {
+          "items": false,
+          "long_name": "Control",
+          "prefixItems": [
+            {
+              "type": {
+                "$ref": "#/$defs/bevy_ecs::entity::Entity"
+              }
+            }
+          ],
+          "short_name": "Control",
+          "type": "array",
+          "typeInfo": "Tuple"
+        },
+        {
+          "items": false,
+          "long_name": "Follow",
+          "prefixItems": [
+            {
+              "type": {
+                "$ref": "#/$defs/bevy_ecs::entity::Entity"
+              }
+            }
+          ],
+          "short_name": "Follow",
+          "type": "array",
+          "typeInfo": "Tuple"
+        },
+        {
+          "long_name": "Free"
+        }
+      ],
+      "short_name": "CameraMode",
+      "type": "object",
+      "typeInfo": "Enum"
+    },
     "bevy_jam_5::camera::flycam::MovementSettings": {
       "additionalProperties": false,
       "isComponent": false,
@@ -9730,6 +9771,47 @@
         "prev_time"
       ],
       "short_name": "GameTime",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::game::SpawnPoint": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::game::SpawnPoint",
+      "properties": {},
+      "required": [],
+      "short_name": "SpawnPoint",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::game::checkpoint::Checkpoint": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "bevy_jam_5::game::checkpoint::Checkpoint",
+      "properties": {
+        "pos": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec3"
+          }
+        }
+      },
+      "required": [
+        "pos"
+      ],
+      "short_name": "Checkpoint",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_jam_5::game::intro::IntroViewpoint": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "bevy_jam_5::game::intro::IntroViewpoint",
+      "properties": {},
+      "required": [],
+      "short_name": "IntroViewpoint",
       "type": "object",
       "typeInfo": "Struct"
     },

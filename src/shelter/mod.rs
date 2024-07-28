@@ -34,7 +34,7 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res
 }
 
 #[derive(Resource)]
-pub struct PlayerIsSafe(bool);
+pub struct PlayerIsSafe(pub bool);
 
 fn check_safe_zones(
     q_player: Query<&CollidingEntities, With<Player>>,

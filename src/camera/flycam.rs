@@ -13,7 +13,7 @@ pub struct MovementSettings {
 
 impl Default for MovementSettings {
     fn default() -> Self {
-        Self { speed: 120. }
+        Self { speed: 200.0 }
     }
 }
 
@@ -66,6 +66,7 @@ pub struct FlycamPlugin;
 impl Plugin for FlycamPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<MovementSettings>()
+            .register_type::<MovementSettings>()
             .add_systems(Update, (player_move, player_look));
     }
 }

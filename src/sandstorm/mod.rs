@@ -50,7 +50,7 @@ fn setup(
 
 #[derive(Resource, Reflect)]
 #[reflect(Resource)]
-pub struct SandstormIntensity(f32);
+pub struct SandstormIntensity(pub f32);
 
 fn update_visuals(
     mut settings: Query<

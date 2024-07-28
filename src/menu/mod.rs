@@ -1,15 +1,13 @@
-use bevy::{
-    input::common_conditions::input_just_pressed, prelude::*, state::state::FreelyMutableState,
-};
+use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use controls::ControlsMenuPlugin;
 use styling::MenuStylingPlugin;
 
-use crate::input::cursor_is_grabbed;
+use crate::{input::cursor_is_grabbed, util::switch_to_state};
 
 mod controls;
 
 #[allow(unused)]
-mod styling;
+pub mod styling;
 
 pub struct MenuPlugin;
 impl Plugin for MenuPlugin {
@@ -32,10 +30,4 @@ pub enum MenuState {
     #[default]
     None,
     Controls,
-}
-
-fn switch_to_state<S: States + FreelyMutableState + Clone>(s: S) -> impl Fn(ResMut<NextState<S>>) {
-    move |mut state: ResMut<NextState<S>>| {
-        state.set(s.clone());
-    }
 }

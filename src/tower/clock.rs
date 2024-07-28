@@ -7,8 +7,12 @@ use crate::game::{GameTime, CYCLE_LENGTH};
 pub struct ClockPlugin;
 impl Plugin for ClockPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<ClockHand>()
-            .add_systems(Update, (set_hand_initial_rotation, set_clock_time).chain());
+        app.register_type::<ClockHand>().add_systems(
+            Update,
+            (set_hand_initial_rotation, set_clock_time)
+                .chain()
+                .run_if(resource_exists::<GameTime>),
+        );
     }
 }
 

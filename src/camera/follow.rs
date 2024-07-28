@@ -9,8 +9,12 @@ impl Plugin for FollowCameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (player_camera, camera_follow_eyes)
-                .run_if(|mode: Res<CameraMode>| matches!(*mode, CameraMode::Follow(_))),
+            (
+                player_control_camera
+                    .run_if(|mode: Res<CameraMode>| matches!(*mode, CameraMode::Control(_))),
+                camera_follow_position,
+                camera_follow_rotation,
+            ),
         );
     }
 }
@@ -28,7 +32,7 @@ pub struct CameraAngles {
     pub pitch: f32,
 }
 
-pub fn player_camera(
+pub fn player_control_camera(
     inputs: Res<Inputs>,
     mut q_camera: Query<(&mut CameraAngles, &mut Transform), With<MainCamera>>,
 ) {
@@ -40,12 +44,17 @@ pub fn player_camera(
     }
 }
 
-pub fn camera_follow_eyes(
-    q_player_eyes: Query<&GlobalTransform, With<Eyes>>,
+pub fn camera_follow_position(
+    q_target: Query<&GlobalTransform>,
     mut q_camera: Query<(&mut Transform, &CameraShake), With<MainCamera>>,
     time: Res<Time>,
+    camera_mode: Res<CameraMode>,
 ) {
-    let Ok(eyes_tr) = q_player_eyes.get_single() else {
+    let target_e = match *camera_mode {
+        CameraMode::Control(e) | CameraMode::Follow(e) => e,
+        _ => return,
+    };
+    let Ok(target_tr) = q_target.get(target_e) else {
         return;
     };
     let (mut camera_tr, shake) = q_camera.single_mut();
@@ -60,5 +69,21 @@ pub fn camera_follow_eyes(
         * 0.4
         * shake.0;
 
-    camera_tr.translation = eyes_tr.translation() + shake;
+    camera_tr.translation = target_tr.translation() + shake;
+}
+
+pub fn camera_follow_rotation(
+    q_target: Query<&GlobalTransform>,
+    mut q_camera: Query<&mut Transform, With<MainCamera>>,
+    camera_mode: Res<CameraMode>,
+) {
+    let CameraMode::Follow(target_e) = *camera_mode else {
+        return;
+    };
+    let Ok(target_tr) = q_target.get(target_e) else {
+        return;
+    };
+    let mut camera_tr = q_camera.single_mut();
+
+    camera_tr.rotation = target_tr.to_scale_rotation_translation().1;
 }
