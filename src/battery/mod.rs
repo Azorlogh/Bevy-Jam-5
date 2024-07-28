@@ -1,9 +1,11 @@
 use avian3d::spatial_query::{SpatialQuery, SpatialQueryFilter};
 use bevy::{input::common_conditions::input_just_pressed, prelude::*, reflect};
+use leafwing_input_manager::common_conditions::action_just_pressed;
 
 use crate::{
     battery,
     camera::{follow::Eyes, MainCamera},
+    input::Action,
     player::{Inventory, Player},
     shelter::SafeZoneText,
     tower::BatterySlot,
@@ -16,8 +18,10 @@ impl Plugin for BatteryPlugin {
         app.register_type::<Battery>()
             .add_systems(Startup, setup)
             .add_systems(Update, player_interact)
-            .add_systems(Update, take.run_if(input_just_pressed(KeyCode::KeyT)))
-            .add_systems(Update, place.run_if(input_just_pressed(KeyCode::KeyY)));
+            .add_systems(
+                Update,
+                (take, place).run_if(action_just_pressed(Action::Interact)),
+            );
     }
 }
 
@@ -78,7 +82,7 @@ fn player_interact(
                 ))
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
-                        "Press T To take battery.",
+                        "Press <interact> to take the battery.",
                         TextStyle {
                             font: asset_server.load("fonts/FiraSans-Bold.ttf"),
                             font_size: 30.0,

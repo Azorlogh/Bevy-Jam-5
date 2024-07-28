@@ -9673,7 +9673,8 @@
         "View",
         "Jump",
         "Crouch",
-        "Place"
+        "PlaceBeacon",
+        "Interact"
       ],
       "short_name": "Action",
       "type": "string",
@@ -9693,6 +9694,11 @@
         "dir": {
           "type": {
             "$ref": "#/$defs/glam::Vec2"
+          }
+        },
+        "interact": {
+          "type": {
+            "$ref": "#/$defs/bool"
           }
         },
         "jump": {
@@ -9716,7 +9722,8 @@
         "view",
         "jump",
         "crouch",
-        "place"
+        "place",
+        "interact"
       ],
       "short_name": "Inputs",
       "type": "object",

@@ -28,7 +28,7 @@ impl Plugin for PlayerPlugin {
                 (
                     spawn::player_spawn,
                     (reset_force, player_float, player_movement, player_jump).chain(),
-                    beacon::place_beacon.run_if(action_just_pressed(Action::Place)),
+                    beacon::place_beacon.run_if(action_just_pressed(Action::PlaceBeacon)),
                 ),
             );
     }
