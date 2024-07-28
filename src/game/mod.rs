@@ -1,9 +1,18 @@
+mod checkpoint;
+mod end_cycle;
+mod in_cycle;
+mod intro;
+mod lost;
 mod monolith;
 
 use bevy::prelude::*;
+use checkpoint::CheckpointPlugin;
+use end_cycle::EndCyclePlugin;
+use in_cycle::InCyclePlugin;
+use intro::{IntroPlugin, IntroViewpoint};
 use monolith::MonolithPlugin;
 
-use crate::{sandstorm::SandstormIntensity, tower::RingBell};
+use crate::util::switch_to_state;
 
 pub const CYCLE_LENGTH: f32 = 60.0 * 5.0;
 
@@ -11,12 +20,22 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<GameTime>()
-            .add_plugins(MonolithPlugin)
+            .register_type::<SpawnPoint>()
+            .add_plugins((
+                IntroPlugin,
+                InCyclePlugin,
+                EndCyclePlugin,
+                CheckpointPlugin,
+                MonolithPlugin,
+            ))
             .init_state::<GameState>()
-            .add_systems(OnEnter(GameState::InGame), enter_game)
+            .enable_state_scoped_entities::<GameState>()
+            // switch to intro when the scene is loaded (there's definitely a better way to do this)
             .add_systems(
                 Update,
-                (update_game_time, ring_bell).run_if(in_state(GameState::InGame)),
+                switch_to_state(GameState::Intro).run_if(in_state(GameState::None).and_then(
+                    |q_added_intro: Query<(), Added<IntroViewpoint>>| !q_added_intro.is_empty(),
+                )),
             );
     }
 }
@@ -36,32 +55,15 @@ impl GameTime {
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 enum GameState {
-    None,
     #[default]
-    InGame,
-    // CycleEnd,
+    None,
+    Intro,
+    InCycle,
+    EndCycle,
+    Lost,
+    _Won,
 }
 
-fn enter_game(mut cmds: Commands) {
-    cmds.insert_resource(GameTime::default());
-}
-
-fn update_game_time(time: Res<Time>, mut game_time: ResMut<GameTime>) {
-    game_time.prev_time = game_time.time;
-    game_time.time += time.delta_seconds();
-}
-
-#[allow(unused)]
-fn control_storm(mut storm_intensity: ResMut<SandstormIntensity>, time: Res<GameTime>) {}
-
-fn ring_bell(time: Res<GameTime>, mut ev_ring: EventWriter<RingBell>) {
-    if time.just_passed(CYCLE_LENGTH) {
-        ev_ring.send(RingBell(3));
-    } else if time.just_passed(CYCLE_LENGTH * 0.75) {
-        ev_ring.send(RingBell(2));
-    } else if time.just_passed(CYCLE_LENGTH * 0.50) {
-        ev_ring.send(RingBell(1));
-    } else if time.just_passed(CYCLE_LENGTH * 0.25) {
-        ev_ring.send(RingBell(0));
-    }
-}
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+pub struct SpawnPoint;

@@ -1,10 +1,19 @@
 use std::f32::consts::TAU;
 
 use bevy::{
-    audio::{PlaybackSettings, SpatialScale, Volume},
-    math::prelude::*,
+    audio::{SpatialScale, Volume},
+    prelude::*,
+    state::state::FreelyMutableState,
 };
 use rand::Rng;
+
+pub fn switch_to_state<S: States + FreelyMutableState + Clone>(
+    s: S,
+) -> impl Fn(ResMut<NextState<S>>) {
+    move |mut state: ResMut<NextState<S>>| {
+        state.set(s.clone());
+    }
+}
 
 pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec2> {
     let cell_size = radius / 2f32.sqrt();

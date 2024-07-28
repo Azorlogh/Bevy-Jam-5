@@ -3,7 +3,7 @@ use bevy::{
     input::common_conditions::{input_just_pressed, input_pressed},
     prelude::*,
 };
-use flycam::{FlyCam, FlycamPlugin, MovementSettings};
+use flycam::{FlyCam, FlycamPlugin};
 use follow::{FollowCameraPlugin, IsControlled};
 
 use crate::player::Player;
@@ -16,23 +16,19 @@ pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((FlycamPlugin, FollowCameraPlugin))
-            .register_type::<MovementSettings>()
-            .insert_resource(MovementSettings {
-                speed: 200.0, // default: 12.0
-            })
+            .register_type::<CameraMode>()
             .insert_resource(CameraMode::Free)
             .add_systems(Startup, spawn::setup_normal)
             .add_systems(Update, apply_mode)
             .add_systems(
                 Update,
                 (|mut mode: ResMut<CameraMode>, mut q_player: Query<(Entity, &mut Transform), With<Player>>, q_camera: Query<&Transform, (Without<Player>, With<MainCamera>)>| {
-                    println!("mode switch!");
                     *mode = match (*mode, q_player.get_single_mut()) {
-                        (CameraMode::Follow(_), _) => CameraMode::Free,
+                        (CameraMode::Control(_), _) => CameraMode::Free,
                         (CameraMode::Free, Ok((player_e, mut player_tr))) => {
                             let cam_pos = q_camera.get_single().unwrap().translation;
                             player_tr.translation = cam_pos;
-                            CameraMode::Follow(player_e)
+                            CameraMode::Control(player_e)
                         },
                         (m, _) => m,
                     }
@@ -45,7 +41,9 @@ impl Plugin for CameraPlugin {
 }
 
 #[derive(Debug, Clone, Copy, Resource, Reflect)]
+#[reflect(Resource)]
 pub enum CameraMode {
+    Control(Entity),
     Follow(Entity),
     Free,
 }
@@ -70,11 +68,16 @@ pub fn apply_mode(
             return;
         };
         match *cam_mode {
-            CameraMode::Follow(followed_e) => {
+            CameraMode::Control(followed_e) => {
                 cmds.entity(followed_e).insert(IsControlled);
                 cmds.entity(cam_e)
                     .remove::<FlyCam>()
                     .insert(CameraRange(5.0));
+            }
+            CameraMode::Follow(_) => {
+                cmds.entity(cam_e)
+                    .remove::<FlyCam>()
+                    .insert(CameraRange(0.0));
             }
             CameraMode::Free => {
                 for e in &q_controlled {

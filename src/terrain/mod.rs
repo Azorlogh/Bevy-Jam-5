@@ -1,3 +1,5 @@
+use std::f32::consts::TAU;
+
 use avian3d::math::Scalar;
 use avian3d::prelude::*;
 use bevy::ecs::entity::EntityHashSet;
@@ -30,24 +32,36 @@ impl Plugin for TerrainPlugin {
             .register_type::<TerrainParams>()
             .register_type::<ChunkVisibility>()
             .register_type::<ChunkReady>()
-            .add_systems(Startup, setup_material)
+            .add_systems(Startup, setup)
             .add_systems(Update, build_terrain) // Change from Update to other
             .add_systems(Update, update_chunk_visibility)
-            .add_systems(Update, update_cursor.before(loddy::d2::update_lod));
+            .add_systems(Update, update_lod_center.before(loddy::d2::update_lod));
     }
 }
 
 #[derive(Resource)]
 pub struct TerrainMaterial(Handle<SandMaterial>);
 
-fn setup_material(mut cmds: Commands, mut materials: ResMut<Assets<SandMaterial>>) {
-    cmds.insert_resource(TerrainMaterial(materials.add(ExtendedMaterial {
+fn setup(
+    mut cmds: Commands,
+    mut materials: ResMut<Assets<SandMaterial>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+) {
+    let material = materials.add(ExtendedMaterial {
         base: StandardMaterial {
             base_color: Color::srgb_u8(255, 208, 0),
             ..default()
         },
         extension: SandMaterialExtension::default(),
-    })));
+    });
+    cmds.insert_resource(TerrainMaterial(material.clone()));
+    cmds.spawn(MaterialMeshBundle {
+        mesh: meshes.add(Rectangle::new(50000.0, 50000.0)),
+        material,
+        transform: Transform::from_xyz(0.0, -200.0, 0.0)
+            .with_rotation(Quat::from_rotation_x(-TAU / 4.0)),
+        ..default()
+    });
 }
 
 fn update_chunk_visibility(mut q_chunk: Query<(&ChunkVisibility, &mut Visibility)>) {
@@ -59,7 +73,7 @@ fn update_chunk_visibility(mut q_chunk: Query<(&ChunkVisibility, &mut Visibility
     }
 }
 
-fn update_cursor(
+fn update_lod_center(
     q_cam: Query<&GlobalTransform, With<Camera>>,
     tp: Res<TerrainParams>,
     mut lod: ResMut<Lod2dTree>,

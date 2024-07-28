@@ -106,11 +106,11 @@ fn setup(
         },
     ));
 
-    cmds.spawn((
-        Name::new("Temple"),
-        SceneBundle {
-            scene: asset_server.load("levels/Scene.glb#Scene0"),
-            ..default()
-        },
-    ));
+    // cmds.spawn((
+    //     Name::new("Temple"),
+    //     SceneBundle {
+    //         scene: asset_server.load("levels/Scene.glb#Scene0"),
+    //         ..default()
+    //     },
+    // ));
 }

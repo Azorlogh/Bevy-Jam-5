@@ -68,6 +68,39 @@ pub fn transparent_root() -> NodeBundle {
     }
 }
 
+pub fn opaque_root() -> NodeBundle {
+    NodeBundle {
+        style: Style {
+            width: Val::Percent(100.0),
+            height: Val::Percent(100.0),
+            flex_direction: FlexDirection::Column,
+            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
+
+            ..default()
+        },
+        background_color: BackgroundColor(Color::BLACK),
+        ..default()
+    }
+}
+
+pub fn bottom_root() -> NodeBundle {
+    NodeBundle {
+        style: Style {
+            width: Val::Percent(100.0),
+            height: Val::Percent(100.0),
+            padding: UiRect::all(Val::Percent(5.0)),
+            flex_direction: FlexDirection::Column,
+            justify_content: JustifyContent::End,
+            align_items: AlignItems::Center,
+
+            ..default()
+        },
+
+        ..default()
+    }
+}
+
 pub fn central_panel() -> NodeBundle {
     NodeBundle {
         style: Style {
@@ -75,12 +108,12 @@ pub fn central_panel() -> NodeBundle {
             flex_direction: FlexDirection::Column,
             justify_content: JustifyContent::FlexStart,
             align_items: AlignItems::Center,
-            border: UiRect::all(Val::Px(BORDER)),
+            // border: UiRect::all(Val::Px(BORDER)),
             row_gap: Val::Px(PADDING),
             ..default()
         },
         border_color: BorderColor(Color::WHITE),
-        background_color: BackgroundColor::from(ORANGE.with_alpha(0.5)),
+        // background_color: BackgroundColor::from(ORANGE.with_alpha(0.5)),
         ..default()
     }
 }
