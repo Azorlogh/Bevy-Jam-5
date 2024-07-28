@@ -1,4 +1,5 @@
 mod audio;
+mod battery;
 mod beacon;
 mod camera;
 mod debug;
@@ -30,21 +31,24 @@ fn main() {
         ))
         // Game plugins
         .add_plugins((
-            camera::CameraPlugin,
-            settings::SettingsPlugin,
-            input::InputPlugin,
-            menu::MenuPlugin,
-            movement::MovementPlugin,
-            player::PlayerPlugin,
-            debug::DebugPlugin,
-            terrain::TerrainPlugin,
-            game::GamePlugin,
-            beacon::BeaconPlugin,
-            sandstorm::SandstormPlugin,
-            tower::TowerPlugin,
-            audio::AudioPlugin,
-            shelter::ShelterPlugin,
-            materials::BuiltinMaterialsPlugin,
+            (
+                camera::CameraPlugin,
+                settings::SettingsPlugin,
+                input::InputPlugin,
+                menu::MenuPlugin,
+                movement::MovementPlugin,
+                player::PlayerPlugin,
+                debug::DebugPlugin,
+                terrain::TerrainPlugin,
+                game::GamePlugin,
+                beacon::BeaconPlugin,
+                sandstorm::SandstormPlugin,
+                tower::TowerPlugin,
+                audio::AudioPlugin,
+                shelter::ShelterPlugin,
+                battery::BatteryPlugin,
+            ),
+            (materials::BuiltinMaterialsPlugin,),
         ))
         .add_systems(Startup, setup)
         .run();

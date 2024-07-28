@@ -7,6 +7,7 @@ impl Plugin for TowerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(clock::ClockPlugin)
             .register_type::<TowerBell>()
+            .register_type::<BatterySlot>()
             .add_event::<RingBell>()
             .add_systems(Startup, setup)
             .add_systems(Update, ring_bell);
@@ -59,10 +60,17 @@ fn ring_bell(
                         settings: PlaybackSettings::DESPAWN
                             .with_spatial(true)
                             .with_spatial_scale(SpatialScale::new(0.0005))
-                            .with_volume(bevy::audio::Volume::new(0.5)),
+                            .with_volume(bevy::audio::Volume::new(0.01)),
                     },
                 ));
             });
         }
     }
+}
+
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+pub struct BatterySlot {
+    pub empty: bool,
+    pub name: String,
 }

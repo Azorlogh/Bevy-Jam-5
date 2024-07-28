@@ -28,7 +28,7 @@ impl Plugin for PlayerPlugin {
                 (
                     spawn::player_spawn,
                     (reset_force, player_float, player_movement, player_jump).chain(),
-                    beacon::place_beacon.run_if(action_just_pressed(Action::Place)),
+                    beacon::place_beacon.run_if(action_just_pressed(Action::PlaceBeacon)),
                 ),
             );
     }
@@ -36,6 +36,19 @@ impl Plugin for PlayerPlugin {
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component, Debug)]
+pub struct Inventory {
+    pub batteries: Vec<String>,
+}
+
+impl Default for Inventory {
+    fn default() -> Self {
+        Inventory {
+            batteries: Vec::new(),
+        }
+    }
+}
 
 pub fn player_movement(
     inputs: Res<Inputs>,
