@@ -26,7 +26,7 @@ fn update_game_time(time: Res<Time>, mut game_time: ResMut<GameTime>) {
 }
 
 fn control_storm(mut storm_intensity: ResMut<SandstormIntensity>, time: Res<GameTime>) {
-    storm_intensity.0 = (time.time - CYCLE_LENGTH * 0.5).max(0.0) / (CYCLE_LENGTH / 4.0);
+    storm_intensity.0 = (time.time - CYCLE_LENGTH * 0.5).max(0.0) / (CYCLE_LENGTH / 2.0);
 }
 
 fn end_cycle(
