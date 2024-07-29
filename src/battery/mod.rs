@@ -116,6 +116,7 @@ fn interact_text(
                     height: Val::Percent(100.0),
                     align_items: AlignItems::End,
                     justify_content: JustifyContent::Center,
+                    padding: UiRect::all(Val::Percent(5.0)),
                     ..default()
                 },
                 ..default()

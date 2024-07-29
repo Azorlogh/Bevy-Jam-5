@@ -65,7 +65,7 @@ pub fn poisson_disc_sampling(
         true
     };
 
-    'outer: while spawn_points.len() > 0 && points.len() < n {
+    'outer: while spawn_points.len() > 0 && output_points.len() < n {
         let spawn_idx = rng.gen_range(0..spawn_points.len());
         let spawn_center = spawn_points[spawn_idx];
 

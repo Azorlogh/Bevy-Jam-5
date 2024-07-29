@@ -34,6 +34,6 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res
 
 pub fn pyramid_light_beam(mut gizmos: Gizmos, q_pyramids: Query<&Transform, With<Pyramid>>) {
     for tr in &q_pyramids {
-        gizmos.ray(tr.translation, Vec3::Y * 1000.0, BLUE * 10000.0);
+        gizmos.ray(tr.translation, Vec3::Y * 10000.0, BLUE);
     }
 }
