@@ -17,6 +17,7 @@ impl Plugin for InCyclePlugin {
 }
 
 fn enter_cycle(mut cmds: Commands) {
+    cmds.add(super::checkpoint::save_checkpoint);
     cmds.insert_resource(GameTime::default());
 }
 

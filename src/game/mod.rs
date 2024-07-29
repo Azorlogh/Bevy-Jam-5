@@ -10,6 +10,7 @@ use checkpoint::CheckpointPlugin;
 use end_cycle::EndCyclePlugin;
 use in_cycle::InCyclePlugin;
 use intro::{IntroPlugin, IntroViewpoint};
+use lost::LostPlugin;
 use monolith::MonolithPlugin;
 
 use crate::util::switch_to_state;
@@ -25,6 +26,7 @@ impl Plugin for GamePlugin {
                 IntroPlugin,
                 InCyclePlugin,
                 EndCyclePlugin,
+                LostPlugin,
                 CheckpointPlugin,
                 MonolithPlugin,
             ))
@@ -55,6 +57,8 @@ impl GameTime {
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 enum GameState {
+    // #[default]
+    // Test,
     #[default]
     None,
     Intro,

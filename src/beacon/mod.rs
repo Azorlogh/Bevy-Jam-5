@@ -59,7 +59,7 @@ fn beacon_spawn(
     for (e, transform) in &q_added_beacons {
         let mut anchor = e;
         let mut segments = vec![];
-        for _ in 0..30 {
+        for _ in 0..15 {
             let segment = cmds
                 .spawn(SceneBundle {
                     scene: assets.model_segment.clone(),

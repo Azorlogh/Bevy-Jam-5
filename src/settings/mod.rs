@@ -41,6 +41,8 @@ impl Default for Settings {
         input_map.insert(Action::Right, KeyCode::KeyD);
         input_map.insert(Action::Jump, KeyCode::Space);
         input_map.insert(Action::Crouch, KeyCode::ControlLeft);
+        input_map.insert(Action::Interact, KeyCode::KeyE);
+        input_map.insert(Action::PlaceBeacon, KeyCode::KeyR);
         input_map.insert(
             Action::View,
             DualAxis::mouse_motion()

@@ -302,6 +302,6 @@ pub struct PostProcessSettings {
     pub yspd: f32,
 
     // WebGL2 structs must be 16 byte aligned.
-    #[cfg(feature = "webgl2")]
+    #[cfg(target_arch = "wasm32")]
     pub _webgl2_padding: Vec3,
 }

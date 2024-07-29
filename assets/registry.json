@@ -52,19 +52,6 @@
       "type": "array",
       "typeInfo": "Tuple"
     },
-    "[f32; 4]": {
-      "isComponent": false,
-      "isResource": false,
-      "items": {
-        "type": {
-          "$ref": "#/$defs/f32"
-        }
-      },
-      "long_name": "[f32; 4]",
-      "short_name": "[f32; 4]",
-      "type": "array",
-      "typeInfo": "Array"
-    },
     "[u32; 2]": {
       "isComponent": false,
       "isResource": false,
@@ -312,6 +299,19 @@
       },
       "long_name": "alloc::vec::Vec<blenvy::blueprints::assets::BlueprintAsset>",
       "short_name": "Vec<BlueprintAsset>",
+      "type": "array",
+      "typeInfo": "List"
+    },
+    "alloc::vec::Vec<blenvy::blueprints::materials::MaterialInfo>": {
+      "isComponent": false,
+      "isResource": false,
+      "items": {
+        "type": {
+          "$ref": "#/$defs/blenvy::blueprints::materials::MaterialInfo"
+        }
+      },
+      "long_name": "alloc::vec::Vec<blenvy::blueprints::materials::MaterialInfo>",
+      "short_name": "Vec<MaterialInfo>",
       "type": "array",
       "typeInfo": "List"
     },
@@ -1306,183 +1306,6 @@
         "match_contacts"
       ],
       "short_name": "NarrowPhaseConfig",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "avian3d::debug_render::configuration::ContactGizmoScale": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "avian3d::debug_render::configuration::ContactGizmoScale",
-      "oneOf": [
-        {
-          "items": false,
-          "long_name": "Constant",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/f32"
-              }
-            }
-          ],
-          "short_name": "Constant",
-          "type": "array",
-          "typeInfo": "Tuple"
-        },
-        {
-          "items": false,
-          "long_name": "Scaled",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/f32"
-              }
-            }
-          ],
-          "short_name": "Scaled",
-          "type": "array",
-          "typeInfo": "Tuple"
-        }
-      ],
-      "short_name": "ContactGizmoScale",
-      "type": "object",
-      "typeInfo": "Enum"
-    },
-    "avian3d::debug_render::configuration::DebugRender": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "avian3d::debug_render::configuration::DebugRender",
-      "properties": {
-        "aabb_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "axis_lengths": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<glam::Vec3>"
-          }
-        },
-        "collider_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "hide_mesh": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "sleeping_color_multiplier": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<[f32; 4]>"
-          }
-        }
-      },
-      "required": [
-        "hide_mesh"
-      ],
-      "short_name": "DebugRender",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "avian3d::debug_render::configuration::PhysicsGizmos": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "avian3d::debug_render::configuration::PhysicsGizmos",
-      "properties": {
-        "aabb_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "axis_lengths": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<glam::Vec3>"
-          }
-        },
-        "collider_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "contact_normal_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "contact_normal_scale": {
-          "type": {
-            "$ref": "#/$defs/avian3d::debug_render::configuration::ContactGizmoScale"
-          }
-        },
-        "contact_point_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "hide_meshes": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "joint_anchor_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "joint_separation_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "raycast_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "raycast_normal_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "raycast_point_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "shapecast_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "shapecast_normal_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "shapecast_point_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "shapecast_shape_color": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_color::color::Color>"
-          }
-        },
-        "sleeping_color_multiplier": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<[f32; 4]>"
-          }
-        }
-      },
-      "required": [
-        "contact_normal_scale",
-        "hide_meshes"
-      ],
-      "short_name": "PhysicsGizmos",
       "type": "object",
       "typeInfo": "Struct"
     },
@@ -3988,10 +3811,10 @@
       "type": "object",
       "typeInfo": "Enum"
     },
-    "bevy_asset::handle::Handle<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, bevy_jam_5::materials::sand::SandMaterialExtension>>": {
+    "bevy_asset::handle::Handle<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, way_of_the_sand::materials::sand::SandMaterialExtension>>": {
       "isComponent": true,
       "isResource": false,
-      "long_name": "bevy_asset::handle::Handle<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, bevy_jam_5::materials::sand::SandMaterialExtension>>",
+      "long_name": "bevy_asset::handle::Handle<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, way_of_the_sand::materials::sand::SandMaterialExtension>>",
       "oneOf": [
         {
           "items": false,
@@ -4013,7 +3836,7 @@
           "prefixItems": [
             {
               "type": {
-                "$ref": "#/$defs/bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, bevy_jam_5::materials::sand::SandMaterialExtension>>"
+                "$ref": "#/$defs/bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, way_of_the_sand::materials::sand::SandMaterialExtension>>"
               }
             }
           ],
@@ -5088,10 +4911,10 @@
       "type": "object",
       "typeInfo": "Enum"
     },
-    "bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, bevy_jam_5::materials::sand::SandMaterialExtension>>": {
+    "bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, way_of_the_sand::materials::sand::SandMaterialExtension>>": {
       "isComponent": false,
       "isResource": false,
-      "long_name": "bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, bevy_jam_5::materials::sand::SandMaterialExtension>>",
+      "long_name": "bevy_asset::id::AssetId<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, way_of_the_sand::materials::sand::SandMaterialExtension>>",
       "oneOf": [
         {
           "additionalProperties": false,
@@ -6748,30 +6571,6 @@
       "short_name": "Entity",
       "type": "object",
       "typeInfo": "Value"
-    },
-    "bevy_egui::EguiSettings": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_egui::EguiSettings",
-      "properties": {
-        "default_open_url_target": {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<alloc::string::String>"
-          }
-        },
-        "scale_factor": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      },
-      "required": [
-        "scale_factor"
-      ],
-      "short_name": "EguiSettings",
-      "type": "object",
-      "typeInfo": "Struct"
     },
     "bevy_gizmos::aabb::AabbGizmoConfigGroup": {
       "additionalProperties": false,
@@ -9658,519 +9457,6 @@
       "short_name": "TouchPhase",
       "type": "string",
       "typeInfo": "Enum"
-    },
-    "bevy_jam_5::audio::ambient::AmbientMusic": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::audio::ambient::AmbientMusic",
-      "properties": {},
-      "required": [],
-      "short_name": "AmbientMusic",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::battery::Battery": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::battery::Battery",
-      "properties": {
-        "name": {
-          "type": {
-            "$ref": "#/$defs/alloc::string::String"
-          }
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "short_name": "Battery",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::camera::CameraMode": {
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::camera::CameraMode",
-      "oneOf": [
-        {
-          "items": false,
-          "long_name": "Control",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/bevy_ecs::entity::Entity"
-              }
-            }
-          ],
-          "short_name": "Control",
-          "type": "array",
-          "typeInfo": "Tuple"
-        },
-        {
-          "items": false,
-          "long_name": "Follow",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/bevy_ecs::entity::Entity"
-              }
-            }
-          ],
-          "short_name": "Follow",
-          "type": "array",
-          "typeInfo": "Tuple"
-        },
-        {
-          "long_name": "Free"
-        }
-      ],
-      "short_name": "CameraMode",
-      "type": "object",
-      "typeInfo": "Enum"
-    },
-    "bevy_jam_5::camera::flycam::MovementSettings": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::camera::flycam::MovementSettings",
-      "properties": {
-        "speed": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      },
-      "required": [
-        "speed"
-      ],
-      "short_name": "MovementSettings",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::game::GameTime": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::game::GameTime",
-      "properties": {
-        "prev_time": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "time": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      },
-      "required": [
-        "time",
-        "prev_time"
-      ],
-      "short_name": "GameTime",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::game::SpawnPoint": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::game::SpawnPoint",
-      "properties": {},
-      "required": [],
-      "short_name": "SpawnPoint",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::game::checkpoint::Checkpoint": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::game::checkpoint::Checkpoint",
-      "properties": {
-        "pos": {
-          "type": {
-            "$ref": "#/$defs/glam::Vec3"
-          }
-        }
-      },
-      "required": [
-        "pos"
-      ],
-      "short_name": "Checkpoint",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::game::intro::IntroViewpoint": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::game::intro::IntroViewpoint",
-      "properties": {},
-      "required": [],
-      "short_name": "IntroViewpoint",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::game::monolith::Monolith": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::game::monolith::Monolith",
-      "properties": {},
-      "required": [],
-      "short_name": "Monolith",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::input::Action": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::input::Action",
-      "oneOf": [
-        "Forward",
-        "Backward",
-        "Left",
-        "Right",
-        "Move",
-        "View",
-        "Jump",
-        "Crouch",
-        "PlaceBeacon",
-        "Interact"
-      ],
-      "short_name": "Action",
-      "type": "string",
-      "typeInfo": "Enum"
-    },
-    "bevy_jam_5::input::Inputs": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::input::Inputs",
-      "properties": {
-        "crouch": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "dir": {
-          "type": {
-            "$ref": "#/$defs/glam::Vec2"
-          }
-        },
-        "interact": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "jump": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "place": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "view": {
-          "type": {
-            "$ref": "#/$defs/glam::Vec2"
-          }
-        }
-      },
-      "required": [
-        "dir",
-        "view",
-        "jump",
-        "crouch",
-        "place",
-        "interact"
-      ],
-      "short_name": "Inputs",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::menu::controls::ButtonState": {
-      "isComponent": false,
-      "isResource": true,
-      "items": false,
-      "long_name": "bevy_jam_5::menu::controls::ButtonState",
-      "prefixItems": [
-        {
-          "type": {
-            "$ref": "#/$defs/core::option::Option<bevy_jam_5::input::Action>"
-          }
-        }
-      ],
-      "short_name": "ButtonState",
-      "type": "array",
-      "typeInfo": "TupleStruct"
-    },
-    "bevy_jam_5::movement::MovementInput": {
-      "isComponent": false,
-      "isResource": false,
-      "items": false,
-      "long_name": "bevy_jam_5::movement::MovementInput",
-      "prefixItems": [
-        {
-          "type": {
-            "$ref": "#/$defs/glam::Vec2"
-          }
-        }
-      ],
-      "short_name": "MovementInput",
-      "type": "array",
-      "typeInfo": "TupleStruct"
-    },
-    "bevy_jam_5::movement::Speed": {
-      "isComponent": false,
-      "isResource": false,
-      "items": false,
-      "long_name": "bevy_jam_5::movement::Speed",
-      "prefixItems": [
-        {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      ],
-      "short_name": "Speed",
-      "type": "array",
-      "typeInfo": "TupleStruct"
-    },
-    "bevy_jam_5::movement::ground::OnGround": {
-      "isComponent": false,
-      "isResource": false,
-      "items": false,
-      "long_name": "bevy_jam_5::movement::ground::OnGround",
-      "prefixItems": [
-        {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        }
-      ],
-      "short_name": "OnGround",
-      "type": "array",
-      "typeInfo": "TupleStruct"
-    },
-    "bevy_jam_5::sandstorm::SandstormIntensity": {
-      "isComponent": false,
-      "isResource": true,
-      "items": false,
-      "long_name": "bevy_jam_5::sandstorm::SandstormIntensity",
-      "prefixItems": [
-        {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      ],
-      "short_name": "SandstormIntensity",
-      "type": "array",
-      "typeInfo": "TupleStruct"
-    },
-    "bevy_jam_5::sandstorm::post_process::PostProcessSettings": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::sandstorm::post_process::PostProcessSettings",
-      "properties": {
-        "blowout_factor": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "distort_strength": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "strength": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "xspd": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "yspd": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      },
-      "required": [
-        "strength",
-        "blowout_factor",
-        "distort_strength",
-        "xspd",
-        "yspd"
-      ],
-      "short_name": "PostProcessSettings",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::shelter::ShelterSafeZone": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::shelter::ShelterSafeZone",
-      "properties": {},
-      "required": [],
-      "short_name": "ShelterSafeZone",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::terrain::TerrainParams": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": true,
-      "long_name": "bevy_jam_5::terrain::TerrainParams",
-      "properties": {
-        "amplitude": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "n_power": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "n_scale": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "n_skew": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        },
-        "n_turb_frequency": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "n_turb_power": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "n_turb_roughness": {
-          "type": {
-            "$ref": "#/$defs/usize"
-          }
-        },
-        "nb_vertices": {
-          "type": {
-            "$ref": "#/$defs/usize"
-          }
-        },
-        "seed": {
-          "type": {
-            "$ref": "#/$defs/u32"
-          }
-        },
-        "size": {
-          "type": {
-            "$ref": "#/$defs/f32"
-          }
-        }
-      },
-      "required": [
-        "nb_vertices",
-        "size",
-        "seed",
-        "amplitude",
-        "n_turb_frequency",
-        "n_turb_power",
-        "n_turb_roughness",
-        "n_scale",
-        "n_power",
-        "n_skew"
-      ],
-      "short_name": "TerrainParams",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::terrain::loddy::ChunkReady": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::terrain::loddy::ChunkReady",
-      "properties": {},
-      "required": [],
-      "short_name": "ChunkReady",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::terrain::loddy::ChunkVisibility": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "bevy_jam_5::terrain::loddy::ChunkVisibility",
-      "oneOf": [
-        "Visible",
-        "Hidden"
-      ],
-      "short_name": "ChunkVisibility",
-      "type": "string",
-      "typeInfo": "Enum"
-    },
-    "bevy_jam_5::tower::BatterySlot": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::tower::BatterySlot",
-      "properties": {
-        "empty": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "name": {
-          "type": {
-            "$ref": "#/$defs/alloc::string::String"
-          }
-        }
-      },
-      "required": [
-        "empty",
-        "name"
-      ],
-      "short_name": "BatterySlot",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::tower::TowerBell": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::tower::TowerBell",
-      "properties": {},
-      "required": [],
-      "short_name": "TowerBell",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "bevy_jam_5::tower::clock::ClockHand": {
-      "additionalProperties": false,
-      "isComponent": true,
-      "isResource": false,
-      "long_name": "bevy_jam_5::tower::clock::ClockHand",
-      "properties": {},
-      "required": [],
-      "short_name": "ClockHand",
-      "type": "object",
-      "typeInfo": "Struct"
     },
     "bevy_math::direction::Dir3": {
       "isComponent": false,
@@ -15066,42 +14352,6 @@
         }
       }
     },
-    "bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
-      "isComponent": false,
-      "isResource": false,
-      "keyType": {
-        "type": {
-          "$ref": "#/$defs/bevy_jam_5::input::Action"
-        }
-      },
-      "long_name": "bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
-      "short_name": "HashMap<Action, Vec<UserInput>, DefaultHashBuilder>",
-      "type": "object",
-      "typeInfo": "Map",
-      "valueType": {
-        "type": {
-          "$ref": "#/$defs/alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>"
-        }
-      }
-    },
-    "bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
-      "isComponent": false,
-      "isResource": false,
-      "keyType": {
-        "type": {
-          "$ref": "#/$defs/bevy_jam_5::input::Action"
-        }
-      },
-      "long_name": "bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
-      "short_name": "HashMap<Action, ActionData, DefaultHashBuilder>",
-      "type": "object",
-      "typeInfo": "Map",
-      "valueType": {
-        "type": {
-          "$ref": "#/$defs/leafwing_input_manager::action_state::ActionData"
-        }
-      }
-    },
     "bevy_utils::hashbrown::HashMap<petgraph::graph::NodeIndex, f32, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
       "isComponent": false,
       "isResource": false,
@@ -15135,6 +14385,42 @@
       "valueType": {
         "type": {
           "$ref": "#/$defs/alloc::vec::Vec<alloc::string::String>"
+        }
+      }
+    },
+    "bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
+      "isComponent": false,
+      "isResource": false,
+      "keyType": {
+        "type": {
+          "$ref": "#/$defs/way_of_the_sand::input::Action"
+        }
+      },
+      "long_name": "bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
+      "short_name": "HashMap<Action, Vec<UserInput>, DefaultHashBuilder>",
+      "type": "object",
+      "typeInfo": "Map",
+      "valueType": {
+        "type": {
+          "$ref": "#/$defs/alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>"
+        }
+      }
+    },
+    "bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
+      "isComponent": false,
+      "isResource": false,
+      "keyType": {
+        "type": {
+          "$ref": "#/$defs/way_of_the_sand::input::Action"
+        }
+      },
+      "long_name": "bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
+      "short_name": "HashMap<Action, ActionData, DefaultHashBuilder>",
+      "type": "object",
+      "typeInfo": "Map",
+      "valueType": {
+        "type": {
+          "$ref": "#/$defs/leafwing_input_manager::action_state::ActionData"
         }
       }
     },
@@ -16363,7 +15649,7 @@
     },
     "blenvy::blueprints::materials::MaterialInfo": {
       "additionalProperties": false,
-      "isComponent": true,
+      "isComponent": false,
       "isResource": false,
       "long_name": "blenvy::blueprints::materials::MaterialInfo",
       "properties": {
@@ -16385,6 +15671,22 @@
       "short_name": "MaterialInfo",
       "type": "object",
       "typeInfo": "Struct"
+    },
+    "blenvy::blueprints::materials::MaterialInfos": {
+      "isComponent": true,
+      "isResource": false,
+      "items": false,
+      "long_name": "blenvy::blueprints::materials::MaterialInfos",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/alloc::vec::Vec<blenvy::blueprints::materials::MaterialInfo>"
+          }
+        }
+      ],
+      "short_name": "MaterialInfos",
+      "type": "array",
+      "typeInfo": "TupleStruct"
     },
     "blenvy::blueprints::spawn_from_blueprints::BlueprintInfo": {
       "additionalProperties": false,
@@ -16610,14 +15912,6 @@
       "type": "object",
       "typeInfo": "Value"
     },
-    "core::ops::Range<f64>": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "core::ops::Range<f64>",
-      "short_name": "Range<f64>",
-      "type": "object",
-      "typeInfo": "Value"
-    },
     "core::option::Option<(u8, u8)>": {
       "isComponent": false,
       "isResource": false,
@@ -16642,33 +15936,6 @@
         }
       ],
       "short_name": "Option<(u8, u8)>",
-      "type": "object",
-      "typeInfo": "Enum"
-    },
-    "core::option::Option<[f32; 4]>": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "core::option::Option<[f32; 4]>",
-      "oneOf": [
-        {
-          "long_name": "None"
-        },
-        {
-          "items": false,
-          "long_name": "Some",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/[f32; 4]"
-              }
-            }
-          ],
-          "short_name": "Some",
-          "type": "array",
-          "typeInfo": "Tuple"
-        }
-      ],
-      "short_name": "Option<[f32; 4]>",
       "type": "object",
       "typeInfo": "Enum"
     },
@@ -17077,33 +16344,6 @@
       "type": "object",
       "typeInfo": "Enum"
     },
-    "core::option::Option<bevy_jam_5::input::Action>": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "core::option::Option<bevy_jam_5::input::Action>",
-      "oneOf": [
-        {
-          "long_name": "None"
-        },
-        {
-          "items": false,
-          "long_name": "Some",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/bevy_jam_5::input::Action"
-              }
-            }
-          ],
-          "short_name": "Some",
-          "type": "array",
-          "typeInfo": "Tuple"
-        }
-      ],
-      "short_name": "Option<Action>",
-      "type": "object",
-      "typeInfo": "Enum"
-    },
     "core::option::Option<bevy_math::rects::rect::Rect>": {
       "isComponent": false,
       "isResource": false,
@@ -17509,33 +16749,6 @@
       "type": "object",
       "typeInfo": "Enum"
     },
-    "core::option::Option<glam::Vec3>": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "core::option::Option<glam::Vec3>",
-      "oneOf": [
-        {
-          "long_name": "None"
-        },
-        {
-          "items": false,
-          "long_name": "Some",
-          "prefixItems": [
-            {
-              "type": {
-                "$ref": "#/$defs/glam::Vec3"
-              }
-            }
-          ],
-          "short_name": "Some",
-          "type": "array",
-          "typeInfo": "Tuple"
-        }
-      ],
-      "short_name": "Option<Vec3>",
-      "type": "object",
-      "typeInfo": "Enum"
-    },
     "core::option::Option<leafwing_input_manager::axislike::DualAxisData>": {
       "isComponent": false,
       "isResource": false,
@@ -17587,6 +16800,33 @@
         }
       ],
       "short_name": "Option<NodeIndex>",
+      "type": "object",
+      "typeInfo": "Enum"
+    },
+    "core::option::Option<way_of_the_sand::input::Action>": {
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "core::option::Option<way_of_the_sand::input::Action>",
+      "oneOf": [
+        {
+          "long_name": "None"
+        },
+        {
+          "items": false,
+          "long_name": "Some",
+          "prefixItems": [
+            {
+              "type": {
+                "$ref": "#/$defs/way_of_the_sand::input::Action"
+              }
+            }
+          ],
+          "short_name": "Some",
+          "type": "array",
+          "typeInfo": "Tuple"
+        }
+      ],
+      "short_name": "Option<Action>",
       "type": "object",
       "typeInfo": "Enum"
     },
@@ -17656,295 +16896,6 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "glam::BVec2": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::BVec2",
-      "properties": {
-        "x": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y"
-      ],
-      "short_name": "BVec2",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::BVec3": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::BVec3",
-      "properties": {
-        "x": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z"
-      ],
-      "short_name": "BVec3",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::BVec3A": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::BVec3A",
-      "short_name": "BVec3A",
-      "type": "object",
-      "typeInfo": "Value"
-    },
-    "glam::BVec4": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::BVec4",
-      "properties": {
-        "w": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "x": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/bool"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z",
-        "w"
-      ],
-      "short_name": "BVec4",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::BVec4A": {
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::BVec4A",
-      "short_name": "BVec4A",
-      "type": "object",
-      "typeInfo": "Value"
-    },
-    "glam::DAffine2": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DAffine2",
-      "properties": {
-        "matrix2": {
-          "type": {
-            "$ref": "#/$defs/glam::DMat2"
-          }
-        },
-        "translation": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec2"
-          }
-        }
-      },
-      "required": [
-        "matrix2",
-        "translation"
-      ],
-      "short_name": "DAffine2",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DAffine3": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DAffine3",
-      "properties": {
-        "matrix3": {
-          "type": {
-            "$ref": "#/$defs/glam::DMat3"
-          }
-        },
-        "translation": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec3"
-          }
-        }
-      },
-      "required": [
-        "matrix3",
-        "translation"
-      ],
-      "short_name": "DAffine3",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DMat2": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DMat2",
-      "properties": {
-        "x_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec2"
-          }
-        },
-        "y_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec2"
-          }
-        }
-      },
-      "required": [
-        "x_axis",
-        "y_axis"
-      ],
-      "short_name": "DMat2",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DMat3": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DMat3",
-      "properties": {
-        "x_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec3"
-          }
-        },
-        "y_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec3"
-          }
-        },
-        "z_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec3"
-          }
-        }
-      },
-      "required": [
-        "x_axis",
-        "y_axis",
-        "z_axis"
-      ],
-      "short_name": "DMat3",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DMat4": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DMat4",
-      "properties": {
-        "w_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec4"
-          }
-        },
-        "x_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec4"
-          }
-        },
-        "y_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec4"
-          }
-        },
-        "z_axis": {
-          "type": {
-            "$ref": "#/$defs/glam::DVec4"
-          }
-        }
-      },
-      "required": [
-        "x_axis",
-        "y_axis",
-        "z_axis",
-        "w_axis"
-      ],
-      "short_name": "DMat4",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DQuat": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DQuat",
-      "properties": {
-        "w": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "x": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z",
-        "w"
-      ],
-      "short_name": "DQuat",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
     "glam::DVec2": {
       "additionalProperties": false,
       "isComponent": false,
@@ -17970,74 +16921,6 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "glam::DVec3": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DVec3",
-      "properties": {
-        "x": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z"
-      ],
-      "short_name": "DVec3",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::DVec4": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::DVec4",
-      "properties": {
-        "w": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "x": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/f64"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z",
-        "w"
-      ],
-      "short_name": "DVec4",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
     "glam::IVec2": {
       "additionalProperties": false,
       "isComponent": false,
@@ -18060,74 +16943,6 @@
         "y"
       ],
       "short_name": "IVec2",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::IVec3": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::IVec3",
-      "properties": {
-        "x": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z"
-      ],
-      "short_name": "IVec3",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
-    "glam::IVec4": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::IVec4",
-      "properties": {
-        "w": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        },
-        "x": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/i32"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z",
-        "w"
-      ],
-      "short_name": "IVec4",
       "type": "object",
       "typeInfo": "Struct"
     },
@@ -18348,43 +17163,6 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "glam::UVec4": {
-      "additionalProperties": false,
-      "isComponent": false,
-      "isResource": false,
-      "long_name": "glam::UVec4",
-      "properties": {
-        "w": {
-          "type": {
-            "$ref": "#/$defs/u32"
-          }
-        },
-        "x": {
-          "type": {
-            "$ref": "#/$defs/u32"
-          }
-        },
-        "y": {
-          "type": {
-            "$ref": "#/$defs/u32"
-          }
-        },
-        "z": {
-          "type": {
-            "$ref": "#/$defs/u32"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z",
-        "w"
-      ],
-      "short_name": "UVec4",
-      "type": "object",
-      "typeInfo": "Struct"
-    },
     "glam::Vec2": {
       "additionalProperties": false,
       "isComponent": false,
@@ -18599,15 +17377,15 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "leafwing_input_manager::action_state::ActionState<bevy_jam_5::input::Action>": {
+    "leafwing_input_manager::action_state::ActionState<way_of_the_sand::input::Action>": {
       "additionalProperties": false,
       "isComponent": false,
       "isResource": false,
-      "long_name": "leafwing_input_manager::action_state::ActionState<bevy_jam_5::input::Action>",
+      "long_name": "leafwing_input_manager::action_state::ActionState<way_of_the_sand::input::Action>",
       "properties": {
         "action_data": {
           "type": {
-            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
+            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, leafwing_input_manager::action_state::ActionData, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
           }
         }
       },
@@ -18956,11 +17734,11 @@
       "type": "string",
       "typeInfo": "Enum"
     },
-    "leafwing_input_manager::input_map::InputMap<bevy_jam_5::input::Action>": {
+    "leafwing_input_manager::input_map::InputMap<way_of_the_sand::input::Action>": {
       "additionalProperties": false,
       "isComponent": false,
       "isResource": false,
-      "long_name": "leafwing_input_manager::input_map::InputMap<bevy_jam_5::input::Action>",
+      "long_name": "leafwing_input_manager::input_map::InputMap<way_of_the_sand::input::Action>",
       "properties": {
         "associated_gamepad": {
           "type": {
@@ -18969,7 +17747,7 @@
         },
         "map": {
           "type": {
-            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<bevy_jam_5::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
+            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<way_of_the_sand::input::Action, alloc::vec::Vec<leafwing_input_manager::user_input::UserInput>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
           }
         }
       },
@@ -19364,6 +18142,544 @@
       "short_name": "Uuid",
       "type": "object",
       "typeInfo": "Value"
+    },
+    "way_of_the_sand::audio::ambient::AmbientMusic": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "way_of_the_sand::audio::ambient::AmbientMusic",
+      "properties": {},
+      "required": [],
+      "short_name": "AmbientMusic",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::battery::Battery": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::battery::Battery",
+      "properties": {
+        "name": {
+          "type": {
+            "$ref": "#/$defs/alloc::string::String"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "short_name": "Battery",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::camera::CameraMode": {
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::camera::CameraMode",
+      "oneOf": [
+        {
+          "items": false,
+          "long_name": "Control",
+          "prefixItems": [
+            {
+              "type": {
+                "$ref": "#/$defs/bevy_ecs::entity::Entity"
+              }
+            }
+          ],
+          "short_name": "Control",
+          "type": "array",
+          "typeInfo": "Tuple"
+        },
+        {
+          "items": false,
+          "long_name": "Follow",
+          "prefixItems": [
+            {
+              "type": {
+                "$ref": "#/$defs/bevy_ecs::entity::Entity"
+              }
+            }
+          ],
+          "short_name": "Follow",
+          "type": "array",
+          "typeInfo": "Tuple"
+        },
+        {
+          "long_name": "Free"
+        }
+      ],
+      "short_name": "CameraMode",
+      "type": "object",
+      "typeInfo": "Enum"
+    },
+    "way_of_the_sand::camera::flycam::MovementSettings": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::camera::flycam::MovementSettings",
+      "properties": {
+        "speed": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "speed"
+      ],
+      "short_name": "MovementSettings",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::game::GameTime": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::game::GameTime",
+      "properties": {
+        "prev_time": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "time": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "time",
+        "prev_time"
+      ],
+      "short_name": "GameTime",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::game::SpawnPoint": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::game::SpawnPoint",
+      "properties": {},
+      "required": [],
+      "short_name": "SpawnPoint",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::game::checkpoint::Checkpoint": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::game::checkpoint::Checkpoint",
+      "properties": {
+        "inventory": {
+          "type": {
+            "$ref": "#/$defs/way_of_the_sand::player::Inventory"
+          }
+        },
+        "pos": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec3"
+          }
+        }
+      },
+      "required": [
+        "pos",
+        "inventory"
+      ],
+      "short_name": "Checkpoint",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::game::intro::IntroViewpoint": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::game::intro::IntroViewpoint",
+      "properties": {},
+      "required": [],
+      "short_name": "IntroViewpoint",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::game::monolith::Monolith": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::game::monolith::Monolith",
+      "properties": {},
+      "required": [],
+      "short_name": "Monolith",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::input::Action": {
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "way_of_the_sand::input::Action",
+      "oneOf": [
+        "Forward",
+        "Backward",
+        "Left",
+        "Right",
+        "Move",
+        "View",
+        "Jump",
+        "Crouch",
+        "PlaceBeacon",
+        "Interact"
+      ],
+      "short_name": "Action",
+      "type": "string",
+      "typeInfo": "Enum"
+    },
+    "way_of_the_sand::input::Inputs": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::input::Inputs",
+      "properties": {
+        "crouch": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "dir": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec2"
+          }
+        },
+        "interact": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "jump": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "place": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "view": {
+          "type": {
+            "$ref": "#/$defs/glam::Vec2"
+          }
+        }
+      },
+      "required": [
+        "dir",
+        "view",
+        "jump",
+        "crouch",
+        "place",
+        "interact"
+      ],
+      "short_name": "Inputs",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::menu::controls::ButtonState": {
+      "isComponent": false,
+      "isResource": true,
+      "items": false,
+      "long_name": "way_of_the_sand::menu::controls::ButtonState",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/core::option::Option<way_of_the_sand::input::Action>"
+          }
+        }
+      ],
+      "short_name": "ButtonState",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "way_of_the_sand::movement::MovementInput": {
+      "isComponent": false,
+      "isResource": false,
+      "items": false,
+      "long_name": "way_of_the_sand::movement::MovementInput",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/glam::Vec2"
+          }
+        }
+      ],
+      "short_name": "MovementInput",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "way_of_the_sand::movement::Speed": {
+      "isComponent": false,
+      "isResource": false,
+      "items": false,
+      "long_name": "way_of_the_sand::movement::Speed",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      ],
+      "short_name": "Speed",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "way_of_the_sand::movement::ground::OnGround": {
+      "isComponent": false,
+      "isResource": false,
+      "items": false,
+      "long_name": "way_of_the_sand::movement::ground::OnGround",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        }
+      ],
+      "short_name": "OnGround",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "way_of_the_sand::player::Inventory": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::player::Inventory",
+      "properties": {
+        "batteries": {
+          "type": {
+            "$ref": "#/$defs/alloc::vec::Vec<alloc::string::String>"
+          }
+        }
+      },
+      "required": [
+        "batteries"
+      ],
+      "short_name": "Inventory",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::sandstorm::SandstormIntensity": {
+      "isComponent": false,
+      "isResource": true,
+      "items": false,
+      "long_name": "way_of_the_sand::sandstorm::SandstormIntensity",
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      ],
+      "short_name": "SandstormIntensity",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "way_of_the_sand::sandstorm::post_process::PostProcessSettings": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "way_of_the_sand::sandstorm::post_process::PostProcessSettings",
+      "properties": {
+        "blowout_factor": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "distort_strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "strength": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "xspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "yspd": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "strength",
+        "blowout_factor",
+        "distort_strength",
+        "xspd",
+        "yspd"
+      ],
+      "short_name": "PostProcessSettings",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::shelter::ShelterSafeZone": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::shelter::ShelterSafeZone",
+      "properties": {},
+      "required": [],
+      "short_name": "ShelterSafeZone",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::terrain::TerrainParams": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": true,
+      "long_name": "way_of_the_sand::terrain::TerrainParams",
+      "properties": {
+        "amplitude": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_power": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "n_scale": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "n_skew": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "n_turb_frequency": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_turb_power": {
+          "type": {
+            "$ref": "#/$defs/f64"
+          }
+        },
+        "n_turb_roughness": {
+          "type": {
+            "$ref": "#/$defs/usize"
+          }
+        },
+        "nb_vertices": {
+          "type": {
+            "$ref": "#/$defs/usize"
+          }
+        },
+        "seed": {
+          "type": {
+            "$ref": "#/$defs/u32"
+          }
+        },
+        "size": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        }
+      },
+      "required": [
+        "nb_vertices",
+        "size",
+        "seed",
+        "amplitude",
+        "n_turb_frequency",
+        "n_turb_power",
+        "n_turb_roughness",
+        "n_scale",
+        "n_power",
+        "n_skew"
+      ],
+      "short_name": "TerrainParams",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::terrain::loddy::ChunkReady": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "way_of_the_sand::terrain::loddy::ChunkReady",
+      "properties": {},
+      "required": [],
+      "short_name": "ChunkReady",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::terrain::loddy::ChunkVisibility": {
+      "isComponent": false,
+      "isResource": false,
+      "long_name": "way_of_the_sand::terrain::loddy::ChunkVisibility",
+      "oneOf": [
+        "Visible",
+        "Hidden"
+      ],
+      "short_name": "ChunkVisibility",
+      "type": "string",
+      "typeInfo": "Enum"
+    },
+    "way_of_the_sand::tower::BatterySlot": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::tower::BatterySlot",
+      "properties": {
+        "empty": {
+          "type": {
+            "$ref": "#/$defs/bool"
+          }
+        },
+        "name": {
+          "type": {
+            "$ref": "#/$defs/alloc::string::String"
+          }
+        }
+      },
+      "required": [
+        "empty",
+        "name"
+      ],
+      "short_name": "BatterySlot",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::tower::TowerBell": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::tower::TowerBell",
+      "properties": {},
+      "required": [],
+      "short_name": "TowerBell",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "way_of_the_sand::tower::clock::ClockHand": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "long_name": "way_of_the_sand::tower::clock::ClockHand",
+      "properties": {},
+      "required": [],
+      "short_name": "ClockHand",
+      "type": "object",
+      "typeInfo": "Struct"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",

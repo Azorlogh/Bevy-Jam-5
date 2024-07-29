@@ -2,6 +2,7 @@ use bevy::{
     prelude::*,
     window::{CursorGrabMode, PrimaryWindow},
 };
+#[cfg(feature = "dev")]
 use bevy_inspector_egui::bevy_egui::EguiContexts;
 use leafwing_input_manager::{
     action_state::ActionState,
@@ -88,7 +89,7 @@ fn update(action: Res<ActionState<Action>>, mut inputs: ResMut<Inputs>) {
 }
 
 fn cursor_grab(
-    mut ctx: EguiContexts,
+    #[cfg(feature = "dev")] mut ctx: EguiContexts,
     mut q_window: Query<&mut Window, With<PrimaryWindow>>,
     buttons: Res<ButtonInput<MouseButton>>,
     keys: Res<ButtonInput<KeyCode>>,
@@ -96,9 +97,11 @@ fn cursor_grab(
 ) {
     let mut window = q_window.single_mut();
     match window.cursor.grab_mode {
-        CursorGrabMode::None
-            if buttons.just_pressed(MouseButton::Left) && !ctx.ctx_mut().is_pointer_over_area() =>
-        {
+        CursorGrabMode::None if buttons.just_pressed(MouseButton::Left) => {
+            #[cfg(feature = "dev")]
+            if ctx.ctx_mut().is_pointer_over_area() || ctx.ctx_mut().is_using_pointer() {
+                return;
+            }
             toggle_actions.enabled = true;
             window.cursor.grab_mode = CursorGrabMode::Locked;
             window.cursor.visible = false;

@@ -1,12 +1,6 @@
-use bevy::{
-    self,
-    input::common_conditions::{input_just_pressed, input_pressed},
-    prelude::*,
-};
+use bevy::{self, prelude::*};
 use flycam::{FlyCam, FlycamPlugin};
 use follow::{FollowCameraPlugin, IsControlled};
-
-use crate::player::Player;
 
 pub mod flycam;
 pub mod follow;
@@ -19,17 +13,27 @@ impl Plugin for CameraPlugin {
             .register_type::<CameraMode>()
             .insert_resource(CameraMode::Free)
             .add_systems(Startup, spawn::setup_normal)
-            .add_systems(Update, apply_mode)
-            .add_systems(
+            .add_systems(Update, apply_mode);
+
+        #[cfg(feature = "dev")]
+        {
+            use crate::player::Player;
+            use bevy::input::common_conditions::{input_just_pressed, input_pressed};
+            app.add_systems(
                 Update,
-                (|mut mode: ResMut<CameraMode>, mut q_player: Query<(Entity, &mut Transform), With<Player>>, q_camera: Query<&Transform, (Without<Player>, With<MainCamera>)>| {
+                (|mut mode: ResMut<CameraMode>,
+                  mut q_player: Query<(Entity, &mut Transform), With<Player>>,
+                  q_camera: Query<
+                    &Transform,
+                    (Without<Player>, With<MainCamera>),
+                >| {
                     *mode = match (*mode, q_player.get_single_mut()) {
                         (CameraMode::Control(_), _) => CameraMode::Free,
                         (CameraMode::Free, Ok((player_e, mut player_tr))) => {
                             let cam_pos = q_camera.get_single().unwrap().translation;
                             player_tr.translation = cam_pos;
                             CameraMode::Control(player_e)
-                        },
+                        }
                         (m, _) => m,
                     }
                 })
@@ -37,6 +41,7 @@ impl Plugin for CameraPlugin {
                     input_pressed(KeyCode::ControlLeft).and_then(input_just_pressed(KeyCode::KeyM)),
                 ),
             );
+        }
     }
 }
 

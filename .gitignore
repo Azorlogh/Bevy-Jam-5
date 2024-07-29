@@ -6,3 +6,7 @@ result
 .direnv
 
 *.blend1
+
+wasm/target
+wasm/*.zip
+wasm/assets/

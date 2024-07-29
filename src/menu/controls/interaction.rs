@@ -1,4 +1,4 @@
-use bevy::{color::palettes::css::PURPLE, prelude::*};
+use bevy::prelude::*;
 use leafwing_input_manager::{input_map::InputMap, user_input::UserInput};
 
 use crate::input::Action;
@@ -63,7 +63,7 @@ pub fn update_button_text(
                     .unwrap_or_default();
                 text.sections[0].value = binding;
 
-                text.sections[0].style.color = PURPLE.into();
+                text.sections[0].style.color = Color::srgb(91.0, 83.0, 49.0);
             }
         }
     }

@@ -2,6 +2,7 @@ mod audio;
 mod battery;
 mod beacon;
 mod camera;
+#[cfg(feature = "dev")]
 mod debug;
 mod game;
 mod input;
@@ -17,15 +18,20 @@ mod tower;
 mod util;
 
 use avian3d::prelude::*;
-use bevy::{core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*};
+use bevy::{
+    asset::AssetMetaCheck, core_pipeline::experimental::taa::TemporalAntiAliasPlugin, prelude::*,
+};
 use blenvy::BlenvyPlugin;
 
 fn main() {
-    App::new()
+    let mut app = App::new();
+    app
         // External plugins
         .add_plugins((
-            DefaultPlugins,
-            TemporalAntiAliasPlugin,
+            DefaultPlugins.build().set(AssetPlugin {
+                meta_check: AssetMetaCheck::Never,
+                ..default()
+            }),
             PhysicsPlugins::default(),
             BlenvyPlugin::default(),
         ))
@@ -38,6 +44,7 @@ fn main() {
                 menu::MenuPlugin,
                 movement::MovementPlugin,
                 player::PlayerPlugin,
+                #[cfg(feature = "dev")]
                 debug::DebugPlugin,
                 terrain::TerrainPlugin,
                 game::GamePlugin,
@@ -50,8 +57,12 @@ fn main() {
             ),
             (materials::BuiltinMaterialsPlugin,),
         ))
-        .add_systems(Startup, setup)
-        .run();
+        .add_systems(Startup, setup);
+
+    #[cfg(not(target_arch = "wasm32"))]
+    app.add_plugins(TemporalAntiAliasPlugin);
+
+    app.run();
 }
 
 #[derive(Component)]

@@ -13,7 +13,7 @@ pub const BUTTON_COLOR: Color = Color::srgb(0.15, 0.15, 0.15);
 pub const HOVERED_BUTTON_COLOR: Color = Color::srgb(0.25, 0.25, 0.25);
 pub const PRESSED_BUTTON_COLOR: Color = Color::srgb(0.35, 0.75, 0.35);
 
-pub const BUTTON_WIDTH: f32 = 200.0;
+pub const BUTTON_WIDTH: f32 = 400.0;
 pub const BUTTON_HEIGHT: f32 = 80.0;
 
 pub const BUTTON_STYLE: Style = {

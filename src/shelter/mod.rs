@@ -1,3 +1,5 @@
+use std::f32::consts::TAU;
+
 use avian3d::prelude::CollidingEntities;
 use bevy::prelude::*;
 
@@ -26,7 +28,8 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res
             Name::new("Shelter"),
             SceneBundle {
                 scene: asset_server.load("levels/Shelter.glb#Scene0"),
-                transform: Transform::from_translation(p.extend(height).xzy()),
+                transform: Transform::from_translation(p.extend(height).xzy())
+                    .with_rotation(Quat::from_rotation_y(rand::random::<f32>() * TAU)),
                 ..default()
             },
         ));

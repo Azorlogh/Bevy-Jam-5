@@ -60,7 +60,7 @@ fn ring_bell(
                         settings: PlaybackSettings::DESPAWN
                             .with_spatial(true)
                             .with_spatial_scale(SpatialScale::new(0.0005))
-                            .with_volume(bevy::audio::Volume::new(0.01)),
+                            .with_volume(bevy::audio::Volume::new(0.5)),
                     },
                 ));
             });

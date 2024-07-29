@@ -7,7 +7,7 @@ use bevy::{
 use super::{flycam::FlyCam, follow::CameraAngles, CameraShake, MainCamera};
 
 pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
-    cmds.spawn((
+    let mut entity_cmds = cmds.spawn((
         MainCamera,
         CameraAngles::default(),
         Camera3dBundle {
@@ -37,20 +37,24 @@ pub fn setup_normal(mut cmds: Commands, asset_server: Res<AssetServer>) {
             ..default()
         },
         CameraShake(0.0),
-    ))
-    .insert(ScreenSpaceAmbientOcclusionBundle::default())
-    .insert(TemporalAntiAliasBundle::default())
-    .insert(VolumetricFogSettings {
-        ambient_intensity: 1.0,
-        ..default()
-    })
-    .insert(BloomSettings::NATURAL)
-    .insert(FogSettings {
-        color: Color::srgb_u8(255, 227, 0),
-        ..default()
-    })
-    .insert(SpatialListener {
-        left_ear_offset: Vec3::X * 0.5 / 2.0,
-        right_ear_offset: Vec3::X * 0.5 / -2.0,
-    });
+    ));
+    entity_cmds
+        .insert(BloomSettings::NATURAL)
+        .insert(FogSettings {
+            color: Color::srgb_u8(255, 227, 0),
+            ..default()
+        })
+        .insert(SpatialListener {
+            left_ear_offset: Vec3::X * 0.5 / 2.0,
+            right_ear_offset: Vec3::X * 0.5 / -2.0,
+        });
+
+    #[cfg(not(target_arch = "wasm32"))]
+    entity_cmds
+        .insert(TemporalAntiAliasBundle::default())
+        .insert(ScreenSpaceAmbientOcclusionBundle::default())
+        .insert(VolumetricFogSettings {
+            ambient_intensity: 1.0,
+            ..default()
+        });
 }

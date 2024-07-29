@@ -37,7 +37,8 @@ impl Plugin for PlayerPlugin {
 #[derive(Component)]
 pub struct Player;
 
-#[derive(Component, Debug)]
+#[derive(Debug, Clone, Component, Reflect)]
+#[reflect(Component)]
 pub struct Inventory {
     pub batteries: Vec<String>,
 }
