@@ -2,7 +2,7 @@ use bevy::{math::DVec3, prelude::*};
 use noise::NoiseFn;
 
 use super::{CameraMode, CameraShake, MainCamera};
-use crate::input::Inputs;
+use crate::{input::Inputs, sandstorm::post_process::PostProcessSettings};
 
 pub struct FollowCameraPlugin;
 impl Plugin for FollowCameraPlugin {
@@ -64,8 +64,8 @@ pub fn update_post_processing_settings(
                 align_factor
             }
         };
-        settings.xspd = xspd;
-        settings.yspd = (-1.0 / xspd.abs()).max(-3.0);
+        settings.xspd = xspd * 2.0;
+        settings.yspd = (-1.0 / xspd.abs()).max(-3.0) * 2.0;
     })
 }
 
