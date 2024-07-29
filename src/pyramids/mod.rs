@@ -1,13 +1,19 @@
-use bevy::{color::palettes::css::BLUE, prelude::*};
+use bevy::prelude::*;
 use std::f32::consts::TAU;
 
-use crate::{terrain::TerrainParams, util::poisson_disc_sampling};
+use crate::{
+    game::{GameTime, CYCLE_LENGTH},
+    terrain::TerrainParams,
+    util::poisson_disc_sampling,
+};
 
 pub struct PyramidPlugin;
 impl Plugin for PyramidPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup)
-            .add_systems(Update, pyramid_light_beam);
+        app.add_systems(Startup, setup).add_systems(
+            Update,
+            pyramid_light_beam.run_if(resource_exists::<GameTime>),
+        );
     }
 }
 
@@ -32,8 +38,17 @@ fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res
     }
 }
 
-pub fn pyramid_light_beam(mut gizmos: Gizmos, q_pyramids: Query<&Transform, With<Pyramid>>) {
+pub fn pyramid_light_beam(
+    mut gizmos: Gizmos,
+    q_pyramids: Query<&Transform, With<Pyramid>>,
+    time: Res<GameTime>,
+) {
     for tr in &q_pyramids {
-        gizmos.ray(tr.translation, Vec3::Y * 10000.0, BLUE);
+        let alpha = 1.0 - ((time.time / CYCLE_LENGTH - 0.5) * 5.0).clamp(0.0, 1.0);
+        gizmos.ray(
+            tr.translation,
+            Vec3::Y * 10000.0,
+            Srgba::rgb(1.0, 5.0, 5.0).with_alpha(alpha),
+        );
     }
 }
