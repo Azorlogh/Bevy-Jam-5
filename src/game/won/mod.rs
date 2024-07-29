@@ -12,7 +12,6 @@ pub struct WonPlugin;
 impl Plugin for WonPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Won), setup_win)
-            .add_systems(Update, setup_win.run_if(input_just_pressed(KeyCode::KeyX)))
             .add_systems(Update, interact_restart);
     }
 }
