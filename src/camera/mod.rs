@@ -77,7 +77,7 @@ pub fn apply_mode(
                 cmds.entity(followed_e).insert(IsControlled);
                 cmds.entity(cam_e)
                     .remove::<FlyCam>()
-                    .insert(CameraRange(5.0));
+                    .insert(CameraRange(8.0));
             }
             CameraMode::Follow(_) => {
                 cmds.entity(cam_e)

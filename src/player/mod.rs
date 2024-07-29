@@ -40,15 +40,7 @@ pub struct Player;
 #[derive(Debug, Clone, Component, Reflect)]
 #[reflect(Component)]
 pub struct Inventory {
-    pub batteries: Vec<String>,
-}
-
-impl Default for Inventory {
-    fn default() -> Self {
-        Inventory {
-            batteries: Vec::new(),
-        }
-    }
+    pub batteries: Vec<Entity>,
 }
 
 pub fn player_movement(

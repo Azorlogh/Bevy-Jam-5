@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use crate::{sandstorm::SandstormIntensity, shelter::PlayerIsSafe, tower::RingBell};
+use crate::{
+    battery::BatterySlot, sandstorm::SandstormIntensity, shelter::PlayerIsSafe, tower::RingBell,
+};
 
 use super::{GameState, GameTime, CYCLE_LENGTH};
 
@@ -10,7 +12,13 @@ impl Plugin for InCyclePlugin {
         app.add_systems(OnEnter(GameState::InCycle), enter_cycle)
             .add_systems(
                 Update,
-                (update_game_time, ring_bell, control_storm, end_cycle)
+                (
+                    update_game_time,
+                    ring_bell,
+                    control_storm,
+                    end_cycle,
+                    trigger_win,
+                )
                     .run_if(in_state(GameState::InCycle)),
             );
     }
@@ -53,5 +61,11 @@ fn ring_bell(time: Res<GameTime>, mut ev_ring: EventWriter<RingBell>) {
         ev_ring.send(RingBell(1));
     } else if time.just_passed(CYCLE_LENGTH * 0.25) {
         ev_ring.send(RingBell(0));
+    }
+}
+
+fn trigger_win(q_slots: Query<&BatterySlot>, mut next_state: ResMut<NextState<GameState>>) {
+    if q_slots.iter().all(|slot| slot.filled) {
+        next_state.set(GameState::Won);
     }
 }

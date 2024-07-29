@@ -63,7 +63,7 @@ pub fn update_button_text(
                     .unwrap_or_default();
                 text.sections[0].value = binding;
 
-                text.sections[0].style.color = Color::srgb(91.0, 83.0, 49.0);
+                text.sections[0].style.color = Color::srgb(0.91, 0.83, 0.49);
             }
         }
     }

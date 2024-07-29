@@ -1,14 +1,14 @@
-use avian3d::spatial_query::{SpatialQuery, SpatialQueryFilter};
-use bevy::{input::common_conditions::input_just_pressed, prelude::*, reflect};
+use avian3d::{
+    prelude::{Collider, Sensor},
+    spatial_query::{SpatialQuery, SpatialQueryFilter},
+};
+use bevy::prelude::*;
 use leafwing_input_manager::common_conditions::action_just_pressed;
 
 use crate::{
-    battery,
-    camera::{follow::Eyes, MainCamera},
+    camera::{CameraRange, MainCamera},
     input::Action,
     player::{Inventory, Player},
-    shelter::SafeZoneText,
-    tower::BatterySlot,
 };
 
 pub struct BatteryPlugin;
@@ -16,87 +16,166 @@ pub struct BatteryPlugin;
 impl Plugin for BatteryPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<Battery>()
-            .add_systems(Startup, setup)
-            .add_systems(Update, player_interact)
+            .register_type::<BatterySlot>()
+            .register_type::<PointingAtBattery>()
+            .register_type::<PointingAtSlot>()
+            .insert_resource(PointingAtBattery(None))
+            .insert_resource(PointingAtSlot(None))
             .add_systems(
                 Update,
-                (take, place).run_if(action_just_pressed(Action::Interact)),
+                (
+                    raycast_batteries,
+                    (
+                        (interact_text, interact_slot_text),
+                        (take, place).run_if(action_just_pressed(Action::Interact)),
+                    ),
+                )
+                    .chain(),
             );
     }
 }
 
-fn setup(mut cmds: Commands, asset_server: Res<AssetServer>) {
-    cmds.spawn((
-        Name::new("Battery"),
-        SceneBundle {
-            scene: asset_server.load("levels/Battery.glb#Scene0"),
-            transform: Transform::from_xyz(105.0, 0.0, 0.0),
-            ..default()
-        },
-    ));
-}
-
 #[derive(Component, Debug, Reflect)]
 #[reflect(Component)]
-pub struct Battery {
-    pub name: String,
-}
+pub struct Battery;
+
+#[derive(PartialEq, Resource, Reflect)]
+#[reflect(Resource)]
+pub struct PointingAtBattery(Option<Entity>);
+
+#[derive(PartialEq, Resource, Reflect)]
+#[reflect(Resource)]
+pub struct PointingAtSlot(Option<Entity>);
 
 #[derive(Component)]
 pub struct BatteryTakeText;
 
-fn player_interact(
-    mut cmds: Commands,
-    q_player: Query<&Transform, With<MainCamera>>,
-    q_battery: Query<Entity, With<Battery>>,
+#[derive(Component)]
+pub struct BatteryPlaceText;
+
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+pub struct BatterySlot {
+    pub filled: bool,
+}
+
+fn raycast_batteries(
+    mut pointing_at_battery: ResMut<PointingAtBattery>,
+    mut pointing_at_slot: ResMut<PointingAtSlot>,
+    q_camera: Query<(&GlobalTransform, &CameraRange), With<MainCamera>>,
+    q_player: Query<(Entity, &Children), With<Player>>,
+    q_battery: Query<(), With<Battery>>,
+    q_slot: Query<&BatterySlot>,
     spatial_query: SpatialQuery,
-    asset_server: Res<AssetServer>,
-    q_text: Query<Entity, With<BatteryTakeText>>,
+    q_ignored: Query<Entity, (With<Sensor>, Without<Battery>, Without<BatterySlot>)>,
 ) {
-    let Ok(player) = q_player.get_single() else {
+    let Ok((player_e, player_children)) = q_player.get_single() else {
         return;
     };
 
-    if let Some(hit) = spatial_query.cast_ray(
-        player.translation,            // Origin
-        player.forward(),              // Direction
-        100.0,                         // Maximum time of impact (travel distance)
-        true,                          // Does the ray treat colliders as "solid"
-        SpatialQueryFilter::default(), // Query filter
+    let Ok((cam_tr, range)) = q_camera.get_single() else {
+        return;
+    };
+
+    if let Some(hit) = spatial_query.cast_ray_predicate(
+        cam_tr.translation(), // Origin
+        cam_tr.forward(),     // Direction
+        range.0,              // Maximum time of impact (travel distance)
+        true,                 // Does the ray treat colliders as "solid"
+        SpatialQueryFilter::from_excluded_entities(vec![
+            player_e,
+            player_children[0],
+            player_children[1],
+        ]), // Query filter
+        &|e| !q_ignored.contains(e),
     ) {
-        for battery in q_battery.iter() {
-            if hit.entity == battery {
-                // Show text for the player
-                cmds.spawn((
-                    BatteryTakeText,
-                    NodeBundle {
-                        style: Style {
-                            width: Val::Percent(100.0),
-                            height: Val::Percent(100.0),
-                            align_items: AlignItems::End,
-                            justify_content: JustifyContent::Center,
-                            ..default()
-                        },
-                        ..default()
-                    },
-                ))
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Press <interact> to take the battery.",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 30.0,
-                            color: Color::srgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
-            } else {
-                for e in &q_text {
-                    cmds.entity(e).despawn_recursive();
-                }
-            }
+        pointing_at_battery.set_if_neq(PointingAtBattery(
+            q_battery.contains(hit.entity).then_some(hit.entity),
+        ));
+        pointing_at_slot.set_if_neq(PointingAtSlot(
+            q_slot
+                .get(hit.entity)
+                .is_ok_and(|slot| !slot.filled)
+                .then_some(hit.entity),
+        ));
+    }
+}
+
+fn interact_text(
+    pointing_at: Res<PointingAtBattery>,
+    mut cmds: Commands,
+    asset_server: Res<AssetServer>,
+    q_text: Query<Entity, With<BatteryTakeText>>,
+) {
+    if pointing_at.0.is_some() && q_text.is_empty() {
+        cmds.spawn((
+            BatteryTakeText,
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    align_items: AlignItems::End,
+                    justify_content: JustifyContent::Center,
+                    ..default()
+                },
+                ..default()
+            },
+        ))
+        .with_children(|parent| {
+            parent.spawn(TextBundle::from_section(
+                "Press <interact> to take the battery.",
+                TextStyle {
+                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                    font_size: 30.0,
+                    color: Color::srgb(0.9, 0.9, 0.9),
+                },
+            ));
+        });
+    } else if pointing_at.0.is_none() {
+        for e in &q_text {
+            cmds.entity(e).despawn_recursive();
         }
-    } else {
+    }
+}
+
+fn interact_slot_text(
+    pointing_at: Res<PointingAtSlot>,
+    mut cmds: Commands,
+    asset_server: Res<AssetServer>,
+    q_inventory: Query<&Inventory>,
+    q_text: Query<Entity, With<BatteryPlaceText>>,
+) {
+    if pointing_at.0.is_some() && q_text.is_empty() {
+        let inventory = q_inventory.single();
+        cmds.spawn((
+            BatteryPlaceText,
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    align_items: AlignItems::End,
+                    justify_content: JustifyContent::Center,
+                    padding: UiRect::all(Val::Percent(5.0)),
+                    ..default()
+                },
+                ..default()
+            },
+        ))
+        .with_children(|parent| {
+            parent.spawn(TextBundle::from_section(
+                if inventory.batteries.len() == 0 {
+                    "You are not carrying any batteries."
+                } else {
+                    "Press <interact> to place a battery."
+                },
+                TextStyle {
+                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                    font_size: 30.0,
+                    color: Color::srgb(0.9, 0.9, 0.9),
+                },
+            ));
+        });
+    } else if pointing_at.0.is_none() {
         for e in &q_text {
             cmds.entity(e).despawn_recursive();
         }
@@ -105,55 +184,38 @@ fn player_interact(
 
 fn take(
     mut cmds: Commands,
+    pointing_at: Res<PointingAtBattery>,
     mut q_inventory: Query<&mut Inventory>,
-    mut q_battery: Query<(&Battery, Entity), With<Battery>>,
 ) {
-    let Ok((battery, b_entity)) = q_battery.get_single_mut() else {
-        return;
-    };
-    let Ok(mut inventory) = q_inventory.get_single_mut() else {
-        return;
-    };
-
-    dbg!(&inventory);
-
-    inventory.batteries.push(battery.name.clone());
-    cmds.entity(b_entity).despawn_recursive();
-
-    // add ui indicator
-    dbg!(&inventory);
+    if let Some(battery_e) = pointing_at.0 {
+        q_inventory.single_mut().batteries.push(battery_e);
+        cmds.entity(battery_e)
+            .insert(Visibility::Hidden)
+            .remove::<Collider>();
+    }
 }
 
 fn place(
-    mut cmds: Commands,
+    pointing_at: Res<PointingAtSlot>,
     mut q_inventory: Query<&mut Inventory>,
-    mut q_battery: Query<&Battery>,
-    mut q_slots: Query<&mut BatterySlot>,
+    mut q_battery: Query<&mut Transform, With<Battery>>,
+    mut q_slots: Query<(&Transform, &mut BatterySlot), (With<BatterySlot>, Without<Battery>)>,
 ) {
-    for mut slot in q_slots.iter_mut() {
-        let Ok(battery) = q_battery.get_single_mut() else {
-            return;
-        };
+    let Some((slot_tr, mut slot)) = pointing_at.0.and_then(|e| q_slots.get_mut(e).ok()) else {
+        info!("not pointing at slot");
+        return;
+    };
 
-        let Ok(mut inventory) = q_inventory.get_single_mut() else {
-            return;
-        };
+    let Ok(mut inventory) = q_inventory.get_single_mut() else {
+        info!("no inventory");
+        return;
+    };
 
-        dbg!(&inventory);
+    let Some(battery_e) = inventory.batteries.pop() else {
+        info!("no battery in inventory");
+        return;
+    };
 
-        let obj = inventory.batteries.pop();
-
-        if obj.is_none() {
-            dbg!("No object");
-            continue;
-        }
-
-        if slot.name == obj.unwrap() {
-            slot.empty = false;
-            // place battery in slot
-        }
-
-        // add ui indicator
-        dbg!(&inventory);
-    }
+    q_battery.get_mut(battery_e).unwrap().translation = slot_tr.translation;
+    slot.filled = true;
 }

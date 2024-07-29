@@ -4,6 +4,7 @@ mod in_cycle;
 mod intro;
 mod lost;
 mod monolith;
+mod won;
 
 use bevy::prelude::*;
 use checkpoint::CheckpointPlugin;
@@ -12,6 +13,7 @@ use in_cycle::InCyclePlugin;
 use intro::{IntroPlugin, IntroViewpoint};
 use lost::LostPlugin;
 use monolith::MonolithPlugin;
+use won::WonPlugin;
 
 use crate::util::switch_to_state;
 
@@ -27,6 +29,7 @@ impl Plugin for GamePlugin {
                 InCyclePlugin,
                 EndCyclePlugin,
                 LostPlugin,
+                WonPlugin,
                 CheckpointPlugin,
                 MonolithPlugin,
             ))
@@ -65,7 +68,7 @@ enum GameState {
     InCycle,
     EndCycle,
     Lost,
-    _Won,
+    Won,
 }
 
 #[derive(Component, Reflect)]

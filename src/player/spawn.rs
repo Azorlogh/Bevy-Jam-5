@@ -32,7 +32,9 @@ pub fn player_spawn(
         cmds.spawn((
             Name::new("Player"),
             Player,
-            Inventory::default(),
+            Inventory {
+                batteries: vec![],
+            },
             SpatialBundle::from_transform(Transform::from_translation(ev.0)),
             (
                 RigidBody::Dynamic,

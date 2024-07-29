@@ -10,6 +10,7 @@ mod materials;
 mod menu;
 mod movement;
 mod player;
+mod pyramids;
 mod sandstorm;
 mod settings;
 mod shelter;
@@ -55,7 +56,7 @@ fn main() {
                 shelter::ShelterPlugin,
                 battery::BatteryPlugin,
             ),
-            (materials::BuiltinMaterialsPlugin,),
+            (materials::BuiltinMaterialsPlugin, pyramids::PyramidPlugin),
         ))
         .add_systems(Startup, setup);
 

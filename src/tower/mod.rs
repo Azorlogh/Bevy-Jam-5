@@ -2,12 +2,13 @@ mod clock;
 
 use bevy::{audio::SpatialScale, prelude::*};
 
+use crate::terrain::TerrainParams;
+
 pub struct TowerPlugin;
 impl Plugin for TowerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(clock::ClockPlugin)
             .register_type::<TowerBell>()
-            .register_type::<BatterySlot>()
             .add_event::<RingBell>()
             .add_systems(Startup, setup)
             .add_systems(Update, ring_bell);
@@ -21,13 +22,14 @@ pub struct BellSounds([Handle<AudioSource>; 4]);
 #[reflect(Component)]
 pub struct TowerBell;
 
-fn setup(mut cmds: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res<TerrainParams>) {
+    let height = terrain_params.get_height(Vec2::ZERO) + 20.0;
     cmds.spawn((
         Name::new("Clocktower"),
         SceneBundle {
             scene: asset_server.load("levels/Tower.glb#Scene0"),
-            transform: Transform::from_xyz(100.0, -1.0, 0.0)
-                .with_rotation(Quat::from_rotation_x(0.1) * Quat::from_rotation_y(0.2)),
+            transform: Transform::from_xyz(100.0, height, 0.0)
+                .with_rotation(Quat::from_rotation_x(0.1) * Quat::from_rotation_y(0.3)),
             ..default()
         },
     ));
@@ -66,11 +68,4 @@ fn ring_bell(
             });
         }
     }
-}
-
-#[derive(Component, Reflect)]
-#[reflect(Component)]
-pub struct BatterySlot {
-    pub empty: bool,
-    pub name: String,
 }

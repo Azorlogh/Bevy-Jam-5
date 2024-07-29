@@ -117,7 +117,7 @@ impl Default for TerrainParams {
         TerrainParams {
             nb_vertices: 64,
             size: 512.0,
-            seed: 0,
+            seed: rand::random(),
             amplitude: 20.0,
             n_turb_frequency: 0.2,
             n_turb_power: 10.0,

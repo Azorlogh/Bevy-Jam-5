@@ -15,7 +15,12 @@ pub fn switch_to_state<S: States + FreelyMutableState + Clone>(
     }
 }
 
-pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec2> {
+pub fn poisson_disc_sampling(
+    radius: f32,
+    region_size: f32,
+    n: usize,
+    prefilled: Vec<Vec2>,
+) -> Vec<Vec2> {
     let cell_size = radius / 2f32.sqrt();
 
     let nb_cells = (region_size / cell_size).ceil() as usize;
@@ -24,7 +29,15 @@ pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec
         .collect();
 
     let mut points: Vec<Vec2> = vec![];
+    let mut output_points: Vec<Vec2> = vec![];
     let mut spawn_points = vec![Vec2::splat(region_size / 2.0)];
+
+    for p in prefilled {
+        points.push(p);
+        spawn_points.push(p);
+        let idx = (p.x / cell_size) as usize + (p.y / cell_size) as usize * nb_cells;
+        grid[idx] = Some(points.len() - 1);
+    }
 
     let mut rng = rand::thread_rng();
 
@@ -60,6 +73,7 @@ pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec
             let dir = Vec2::from_angle(rng.r#gen::<f32>() * TAU);
             let candidate = spawn_center + dir * rng.gen_range(radius..2.0 * radius);
             if is_valid(&grid, &points, candidate) {
+                output_points.push(candidate);
                 points.push(candidate);
                 spawn_points.push(candidate);
                 let idx = (candidate.x / cell_size) as usize
@@ -71,7 +85,7 @@ pub fn poisson_disc_sampling(radius: f32, region_size: f32, n: usize) -> Vec<Vec
         spawn_points.remove(spawn_idx);
     }
 
-    points
+    output_points
 }
 
 pub fn spatial_playback_remove(volume: f32, scale: f32) -> PlaybackSettings {
