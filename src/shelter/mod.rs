@@ -21,7 +21,7 @@ pub struct ShelterSafeZone;
 
 fn setup(mut cmds: Commands, asset_server: Res<AssetServer>, terrain_params: Res<TerrainParams>) {
     let region = 4000.0;
-    for p in poisson_disc_sampling(1000.0, region, 30000, vec![Vec2::splat(region / 2.0)]) {
+    for p in poisson_disc_sampling(700.0, region, 30000, vec![Vec2::splat(region / 2.0)]) {
         let p = p - region / 2.0;
         let height = terrain_params.get_height(p) + 3.0;
         cmds.spawn((
