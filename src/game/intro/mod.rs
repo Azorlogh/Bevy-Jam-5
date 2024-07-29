@@ -4,6 +4,7 @@ use crate::{
     camera::CameraMode,
     menu::styling::{bottom_root, default_text},
     player::Player,
+    terrain::TerrainParams,
 };
 
 use super::{GameState, SpawnPoint};
@@ -65,9 +66,12 @@ pub fn exit_intro(
     mut camera_mode: ResMut<CameraMode>,
     mut q_player: Query<(Entity, &mut Transform), With<Player>>,
     q_spawn_point: Query<&Transform, (With<SpawnPoint>, Without<Player>)>,
+    terrain_params: Res<TerrainParams>,
 ) {
     let (player_e, mut player_tr) = q_player.single_mut();
     *camera_mode = CameraMode::Control(player_e);
 
-    player_tr.translation = q_spawn_point.single().translation;
+    let xz = q_spawn_point.single().translation.xz();
+    let height = terrain_params.get_height(xz) + 4.0;
+    player_tr.translation = xz.extend(height).xzy();
 }

@@ -192,15 +192,16 @@ fn take(
         q_inventory.single_mut().batteries.push(battery_e);
         cmds.entity(battery_e)
             .insert(Visibility::Hidden)
-            .remove::<Collider>();
+            .remove::<Collider>()
+            .remove_parent();
     }
 }
 
 fn place(
     pointing_at: Res<PointingAtSlot>,
     mut q_inventory: Query<&mut Inventory>,
-    mut q_battery: Query<&mut Transform, With<Battery>>,
-    mut q_slots: Query<(&Transform, &mut BatterySlot), (With<BatterySlot>, Without<Battery>)>,
+    mut q_battery: Query<(&mut Transform, &mut Visibility), With<Battery>>,
+    mut q_slots: Query<(&GlobalTransform, &mut BatterySlot), (With<BatterySlot>, Without<Battery>)>,
 ) {
     let Some((slot_tr, mut slot)) = pointing_at.0.and_then(|e| q_slots.get_mut(e).ok()) else {
         info!("not pointing at slot");
@@ -217,6 +218,9 @@ fn place(
         return;
     };
 
-    q_battery.get_mut(battery_e).unwrap().translation = slot_tr.translation;
+    let (mut tr, mut vis) = q_battery.get_mut(battery_e).unwrap();
+    tr.translation = slot_tr.translation();
+    tr.rotation = slot_tr.to_scale_rotation_translation().1;
+    *vis = Visibility::Inherited;
     slot.filled = true;
 }
