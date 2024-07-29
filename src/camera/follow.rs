@@ -14,6 +14,7 @@ impl Plugin for FollowCameraPlugin {
                     .run_if(|mode: Res<CameraMode>| matches!(*mode, CameraMode::Control(_))),
                 camera_follow_position,
                 camera_follow_rotation,
+                update_post_processing_settings,
             ),
         );
     }
@@ -42,6 +43,30 @@ pub fn player_control_camera(
         camera_tr.rotation =
             Quat::from_rotation_y(camera_angles.yaw) * Quat::from_rotation_x(camera_angles.pitch);
     }
+}
+
+pub fn update_post_processing_settings(
+    mut q_camera: Query<
+        (&mut PostProcessSettings, &GlobalTransform),
+        (With<MainCamera>, Changed<Transform>),
+    >,
+) {
+    q_camera.iter_mut().for_each(|(mut settings, transform)| {
+        const WIND_DIRECTION: Vec3 = Vec3::new(1.0, 0.0, 1.0);
+        let forward = transform.forward().as_vec3();
+        let wind = WIND_DIRECTION.normalize();
+        let xspd = {
+            let align = forward.dot(wind);
+            let align_factor = align * 3.0;
+            if align_factor.abs() < 1.0 {
+                align_factor.signum() * 0.5
+            } else {
+                align_factor
+            }
+        };
+        settings.xspd = xspd;
+        settings.yspd = (-1.0 / xspd.abs()).max(-3.0);
+    })
 }
 
 pub fn camera_follow_position(
