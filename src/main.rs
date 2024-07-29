@@ -69,24 +69,7 @@ fn main() {
 #[derive(Component)]
 pub struct Sun;
 
-fn setup(
-    mut cmds: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    // Dynamic physics object with a collision shape and initial angular velocity
-    cmds.spawn((
-        RigidBody::Dynamic,
-        Collider::cuboid(1.0, 1.0, 1.0),
-        AngularVelocity(Vec3::new(2.5, 3.5, 1.5)),
-        PbrBundle {
-            mesh: meshes.add(Cuboid::new(1.0, 1.0, 1.0)),
-            material: materials.add(Color::srgb_u8(124, 144, 255)),
-            transform: Transform::from_xyz(0.0, 4.0, 0.0),
-            ..default()
-        },
-    ));
-
+fn setup(mut cmds: Commands) {
     // Light
     cmds.spawn((
         Sun,

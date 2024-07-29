@@ -44,11 +44,14 @@ pub fn pyramid_light_beam(
     time: Res<GameTime>,
 ) {
     for tr in &q_pyramids {
-        let alpha = 1.0 - ((time.time / CYCLE_LENGTH - 0.5) * 5.0).clamp(0.0, 1.0);
-        gizmos.ray(
-            tr.translation,
-            Vec3::Y * 10000.0,
-            Srgba::rgb(1.0, 5.0, 5.0).with_alpha(alpha),
-        );
+        let fade_t = ((time.time / CYCLE_LENGTH - 0.5) * 2.0).clamp(0.0, 1.0);
+        let alpha = 1.0 - (fade_t * 3.0).clamp(0.0, 1.0);
+        if alpha > 0.0 {
+            gizmos.ray(
+                tr.translation,
+                Vec3::Y * 10000.0,
+                Srgba::rgb(1.0 * alpha, 5.0 * alpha, 5.0 * alpha).with_alpha(alpha * 0.5),
+            );
+        }
     }
 }
