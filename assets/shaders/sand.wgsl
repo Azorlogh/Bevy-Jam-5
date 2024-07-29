@@ -106,7 +106,7 @@ fn fragment(
 	// 	Nt,
 	// );
 
-	let waves = noise_simplex_vec3f(in.world_position.xyz*0.04*vec3f(6.0, 1.0, 1.0) + vec3f(0.2131, 0.31234, 0.52141) * t * 0.5)*0.5+0.5;
+	let waves = noise_simplex_vec3f(in.world_position.xyz*0.04*vec3f(6.0, 1.0, 1.0) + vec3f(0.2131, 0.31234, 0.52141) * t * 0.2)*0.5+0.5;
 
 	pbr_input.N = normalize(pbr_input.N + vec3f(noise_normal.x, 0.0, noise_normal.y)*0.2+vec3f(0, -0.5, 0)*waves);
 
